@@ -1,9 +1,5 @@
-# Getting Started: Raspberry Pi Headless Setup for Running an Ergo Full Node
-
-A quick tutorial on how to setup a raspberry pi (raspi, or raspberrypi) to be headless (that is remote into pi,
-pi does not have a monitor or mouse plugged in). This is geared toward beginners who want to learn and hopefully get more Ergo nodes running.
-
 # Part 1: Getting your Pi Setup
+
 Time Allotment:
 - 1hr to order parts (if you don't have it)
 - 1hr-3hr to execute (depending on skill level and snags)
