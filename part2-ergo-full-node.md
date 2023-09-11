@@ -13,8 +13,45 @@ update to recommended parameters per raspi
 java -version //to check install correctly
 sudo reboot //just to make sure everything is good
 
-
 ## Ergo Node Steps
+
+Follow:
+https://github.com/Eeysirhc/ergo-rpi/blob/main/docs/ergo-node.md
+
+
+e.g.
+`wget https://github.com/ergoplatform/ergo/releases/download/v5.0.13/ergo-5.0.13.jar`
+
+e.g.
+```
+curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
+-H "accept: application/json" \
+-H "Content-Type: application/json" \
+-d "\"hello\""
+```
+
+ergo {
+  node {
+    mining = false
+  }
+}
+
+scorex {
+ restApi {
+    # Hex-encoded Blake2b256 hash of an API key. 
+    # Should be 64-chars long Base16 string.
+    # below is the hash of the string 'hello'
+    # replace with your actual hash 
+    apiKeyHash = "324dcf027dd4a30a932c441f365a25e86b173defa4b8e58948253471b81b72cf"
+  }
+}
+
+java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf
+e.g
+`java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf`
+
+http://headless.local:9053/panel
+
 recommend the step-by-step guide
 https://github.com/ergoplatform/ergo/wiki/Set-up-a-full-node
 
@@ -38,4 +75,10 @@ mkdir ergo_folder
 cd ergo_folder
 echo " " > ergo.conf //makes empty file
 nano ergo.conf
+
+### Enable Port Forwarding
+
+Per [ErgoNodes.net](http://ergonodes.net/) you'll need to allow port forwarding of your ergo node thru your home router for an incoming and outgoing connection.
+
+https://github.com/Satergo/Satergo/wiki/Initial-node-configuration
 

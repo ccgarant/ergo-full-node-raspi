@@ -6,7 +6,10 @@ Time Allotment:
 
 ## Full Kit Equipment
 - Macro holder and mini SD card
-- Computer check for SD Flash Drive (else you'll need to buy a preloaded SD card)
+- Check your computer for an SD Flash Drive slot (else you'll need to buy a preloaded SD card).
+- Raspberry Pi (tutorial is on a 3b+)
+- External Solid State Drive (SSD) memory 
+- 
 
 ## Setup & Configuration
 
