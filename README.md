@@ -1,4 +1,4 @@
-# Tutorial: Running an Ergo Full Node on a Raspberry Pi
+# Tutorial: Running an Ergo Full Node on a Headless Raspberry Pi
 
 A tutorial on how to setup and run an Ergo Full Node on a Headless Raspberry Pi.
 
@@ -10,26 +10,46 @@ Don't worry, it's not that hard, and you will feel super cool afterwards.
 
 The tutorial includes:
 
-## Headless Raspi 3B+ Setup & Login
-
-[Part 1: Raspi Setup](/part1-raspi-setup.md)
+## [Part 1: Headless Raspi Setup & Login](/part1-raspi-setup.md)
 - Hardware Shopping List
 - Brief Intro to Headless Command Line Interface (CLI)
 - Flash Setup & Configuration of the Pi
 - Secure Shelling into the Pi
 - Setup External Storage USB
 
-## Configure, Download, and Run the Ergo Node
-
-[Part 2: Ergo Full Node Steps](/part2-ergo-full-node.md) 
+## [Part 2: Ergo Full Node Configure & Run](/part2-ergo-full-node.md) 
 - Setup & Configure the Pi for Ergo Node
 - Headless Ergo Node setup
     - goal is for nipopow bootstrap setup
 - Run the node in the background thru a tmux session
 
+## [Part 3: Run the Node in the background to fully sync](/part3-run-node-in-background-tmux.md)
+- Why is this needed (ssh connection breaks when computer sleeps)
+- What is a tmux session?
+- Run the node syncing in the background as a tmux session
+
+## [Part 4: Robustly run the node in the background as a systemd](/part4-robust-run-node-in-background-systemd.md)
+- Robustly configure the rpi to run the node upon startup, restart, and in the background
+- Port forwarding to get incoming peer connections (not just outgoing).
+
+## [Ergo Full Node Resources](/resources.md)
+A cheatsheet and comprehensive list of references.
+
+------------------------------------
 ## Issues, Improvements, Help
+
 This project is still in work #buildinginpublic
 
-If anything doesn't work or needs clarification, open a github Issue
+If anything doesn't work or needs clarification, open a github Issue, or fork and submit a pull request update.
 
-If you need help, DM me on twitter @thestophe or find me in the Matrix #ergomatrix:matrix.org 
+If you need help, DM me on twitter [@thestophe](https://twitter.com/TheStophe) or find me in the [Matrix #ergomatrix:matrix.org](https://matrix.to/#/#ergomatrix:matrix.org).
+
+-------------------
+
+## Too Much Work - Something Easier!
+
+A really simple and nice option is to just use [Satergo](https://satergo.com/) full node wallet.
+
+You can just download and run it, batteries included. If you don't have the computer memory storage, you can reference a "remote" full node.  
+
+This is a great option, plus the UI/UX is beautiful.
