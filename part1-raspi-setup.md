@@ -1,7 +1,7 @@
 # Part 1: Getting your Raspberry Pi (rpi) Setup
 
 Time Allotment:
-- 1hr to order parts (if you don't have it)
+- 1hr to order parts (if you don't have it). Estimate ~$200 USD.
 - 1hr-3hr to execute (depending on skill level and snags)
 
 ## Full Kit Equipment
@@ -19,41 +19,74 @@ Time Allotment:
 7. Raspberry Pi Case, [Recommend Amazon Flirc metal case](https://www.amazon.com/Flirc-Raspberry-Case-Gen2-Model/dp/B07349HT26/ref=sr_1_15?crid=355HS8YRL4UE8&keywords=raspberry%2Bpi%2Bcase%2Bmetal&qid=1694885842&s=pc&sprefix=raspberry%2Bpi%2Bcase%2Bmetal%2Ccomputers%2C124&sr=1-15&th=1)
     - Just make sure the case is a good heat sink, has a fan, or airflow.
 
+
 ## Setup & Configuration
 
-ifconfig //see all the devices on your internet. find the rasp pi IP address
-ping <ip_number> //or ping raspberrypi.local to see if the connection works
 
-## Flashing Setup
+### SD Card Flashing Setup
+This part covers "flashing" (writing) the SD Card with the Operating System (OS) into firmware memory.
 
-https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system
-Raspberry Pi Imager (I used macbook pro which has an SD Flash drive)
-Note: For external SSD USB storage, do not plug it in yet, it freezes your pi. Setup for this is later.
-Follow this youtube video I found helpful:
-- Video notes...
+Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (I used macbook pro which has an SD Flash drive).
 
-## Getting into your Pi
-- bring
+You could follow the [Raspberry Pi Documentation: Installing the Operating System](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system), however I found watching the following youtube video much more helpful and easier:
 
-- flashing drive with rasp
-    - rename raspberrypi (used "headless")
-    - ssh enable with password
-    - update username (used "pi")
-    - use custom password
-    - enable it to connecto to wifi
+[Youtube: Headless Raspberry Pi Zero Setup](https://youtu.be/wQJqwGVNHTM?si=GzJZh4_am2cLS1gL)
 
-- ssh pi@headless.local //if there were failed attempts, cd / cd .ssh / nano known_hosts / ctrl+k on raspi lines
+- Choose Raspberry Pi OS Lite 32bit
+- Choose SD Card to write to
+- Bottom right click gear for advanced settings options
+- Rename raspberrypi (used "headless")
+- Ssh enable with password
+    - Select password auth. Use custom password (to be used to get in via ssh later as 2 factor authentication)
+- Update username (used "pi")
+- Enable it to connecto to wifi
+    - Note SSID is "wifi name"
+
+### Hardware Assembly & Checking Pi IP Address
+Assembly the rpi and connect it to your router.
+
+**⚠️ WARNING: For external SSD USB storage, do not plug it in yet, it freezes your pi on power up. Setup for this is later.**
+- Put the pi in the case
+- Put the micro SD card in in rpi
+- Connect it to power
+- Connect it to your Internet Router hardlined via ethernet connection (easier to troubleshoot, can do wifi later)
+- Put the SSD Drive into the case, but do not connect it to the rpi yet!
+- Pi takes about 5 minutes to boot up. Wait 5 minutes before trying to ssh in.
+
+### Getting into your rpi
+Now this part can be daunting, but let's dive in.
+- Open terminal (use your mac or windows search, type in terminal)
+    - Unfamilar? Youtube "command line terminal tutorial <your_operating_system_here> (e.g. command line terminal tutorial macos) 
+- ssh pi@headless.local //secure shell into the rpi, if setup correctly this should work.
+    - if there were failed attempts, in terminal:
+        - cd //to home folder (directory)
+        - cd .ssh //directories with a dot in front are hidden
+        - nano known_hosts //to check ssh connections
+        - (need to troubleshoot further...)
+    - ssh? [Article: What is SSH?](https://www.makeuseof.com/what-is-ssh/)
 - sudo apt-get update  //update the pi packages
-- sudo apt-get upgrade //upgrade the pi
-- sudo raspi-config
-
-## Raspi Configuration Setup
-sudo raspi-config
+- sudo apt-get upgrade //upgrade the pi with updates
+- sudo raspi-config    //this is where most of the configuration is done
 
 ### External Hardware Mounting
-echo program_usb_boot_mode=1 | sudo tee -a /boot/config.txt
+This is to allow the external SSD drive memory to be attached and not freeze the rpi. This does not come default in Lite.
 
 from: https://www.raspberrypi.com/documentation/computers/configuration.html#external-storage-configuration
+
+We need to implement and follow:
+- Mounting
+- Auto Mounting
+- Unmounting
+
+```bash
+sudo raspi-config
+```
+
+```bash
+echo program_usb_boot_mode=1 | sudo tee -a /boot/config.txt
+```
+
+```bash
 sudo lsblk -o UUID,NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL,MODEL
 follow steps here
 Mounting
