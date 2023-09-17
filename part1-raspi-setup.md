@@ -4,6 +4,8 @@ Time Allotment:
 - 1hr to order parts (if you don't have it). Estimate ~$200 USD.
 - 1hr-3hr to execute (depending on skill level and snags)
 
+![full-kit-hardware](/images/IMG_4548.jpeg)
+
 ## Full Kit Equipment
 1. Micro SD card 8Gb+ & Adapter, [Recommend: Amazon 32gb card ~$15](https://www.amazon.com/s?k=micro+sd+card&rh=n%3A516866%2Cp_n_feature_two_browse-bin%3A6518304011&crid=YXIYMGJA97E7&nav_sdd=aps&rnid=6518301011&sprefix=micro+sd+card&ref=nb_sb_ss_w_sbl-tr-t1_micro-sd-card_k0_1_13_2)
     - See rpi docs for sd cards [here](https://www.raspberrypi.com/documentation/computers/getting-started.html#sd-cards-for-raspberry-pi)
