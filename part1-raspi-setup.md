@@ -71,33 +71,30 @@ Now this part can be daunting, but let's dive in.
 ### External Hardware Mounting
 This is to allow the external SSD drive memory to be attached and not freeze the rpi. This does not come default in Lite.
 
-from: https://www.raspberrypi.com/documentation/computers/configuration.html#external-storage-configuration
+For external storage configuration, we'll need to follow the rpi documentation: 
 
-We need to implement and follow:
+https://www.raspberrypi.com/documentation/computers/configuration.html#external-storage-configuration
+
+Follow the directions for the following sections:
 - Mounting
 - Auto Mounting
 - Unmounting
 
-```bash
-sudo raspi-config
-```
+Note, my external storage looked like the following:
 
-```bash
-echo program_usb_boot_mode=1 | sudo tee -a /boot/config.txt
-```
+From running 
 
 ```bash
 sudo lsblk -o UUID,NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL,MODEL
-follow steps here
-Mounting
-Setting up Auto Mounting
-Unmounting
+```
 
-//Notes
+My storage was the following:
+- 67E3-17ED //external storage partition ID
+- vfat      //type of storage
 
-67E3-17ED
-vfat
-UUID=5C24-1453 /mnt/mydisk vfat defaults,auto,users,rw,nofail 0 0
+This is what my line looks like in the `sudo nano /etc/fstab` file.
+
+`UUID=67E3-17ED /mnt/mydisk vfat defaults,auto,users,rw,nofail 0 0`
 
 
 
