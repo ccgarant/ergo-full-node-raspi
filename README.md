@@ -4,6 +4,8 @@ A tutorial on how to setup and run an Ergo Full Node on a Headless Raspberry Pi.
 
 ![ergo-full-node-rpi-iso.png](/images/ergo-full-node-rpi-iso.png)
 
+![ergo-full-node-rpi-iso](https://github.com/ccgarant/ergo-full-node-raspi/assets/25705528/65f2f88d-8a96-41a6-91e1-c16614dca54c)
+
 A headless raspberry pi (pi, raspi, or raspberrypi) does not have a monitor or mouse plugged in. Instead, you are securely remoted into the pi via the terminal command line.
 
 This is geared toward beginners who want to learn and hopefully get more Ergo nodes running! See [ErgoNodes.net](http://ergonodes.net/).
