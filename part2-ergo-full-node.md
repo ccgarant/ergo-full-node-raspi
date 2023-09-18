@@ -1,13 +1,15 @@
 # Part 2: Ergo Full Node Setup
 Time Allotment:
-- 1hr to order parts (if you don't have it)
-- 1hr-3hr to execute (depending on skill level and snags)
+- 15min-2hr to execute (depending on skill level and snags)
 
 ## Setup & Config
 The following steps will install package dependencies like java, and streamline memory
 https://docs.ergoplatform.com/node/install/pi/#getting-started
-bonus work: recommend do the zram //tldr get 50% more out of your memory, more efficient solution, backend sharing
+
+bonus work: recommend do the zram
+ - tldr: gets 50% more out of your memory, more efficient solution, backend sharing
 sudo nano zram-swap-config.config
+
 update to recommended parameters per raspi
 
 java -version //to check install correctly

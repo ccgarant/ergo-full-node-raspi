@@ -41,7 +41,7 @@ You could follow the [Raspberry Pi Documentation: Installing the Operating Syste
 - Ssh enable with password
     - Select password auth. Use custom password (to be used to get in via ssh later as 2 factor authentication)
 - Update username (used "pi")
-- Enable it to connecto to wifi
+- Enable it to connec to the wifi
     - Note SSID is "wifi name"
 
 ### Hardware Assembly & Checking Pi IP Address
@@ -59,16 +59,32 @@ Assembly the rpi and connect it to your router.
 Now this part can be daunting, but let's dive in.
 - Open terminal (use your mac or windows search, type in terminal)
     - Unfamilar? Youtube "command line terminal tutorial <your_operating_system_here>" (e.g. command line terminal tutorial macos) 
-- ssh pi@headless.local //secure shell into the rpi, if setup correctly this should work.
-    - if there were failed attempts, in terminal:
-        - cd //to home folder (directory)
-        - cd .ssh //directories with a dot in front are hidden
-        - nano known_hosts //to check ssh connections
-        - (need to troubleshoot further...)
+
+Secure shell into the rpi, if setup correctly this should work.
+```bash
+ssh pi@headless.local
+```
+- if there were failed attempts, in terminal:
+    - cd //to home folder (directory)
+    - cd .ssh //directories with a dot in front are hidden
+    - nano known_hosts //to check ssh connections
+    - (need to troubleshoot further...)
     - ssh? [Article: What is SSH?](https://www.makeuseof.com/what-is-ssh/)
-- sudo apt-get update  //update the pi packages
-- sudo apt-get upgrade //upgrade the pi with updates
-- sudo raspi-config    //this is where most of the configuration is done
+
+Update the pi packages
+```bash
+sudo apt-get update  
+```
+
+Upgrade the pi with updates
+```bash
+sudo apt-get upgrade 
+```
+
+This is where most of the configuration is done for the rpi. Feel free to explore it.
+```bash
+sudo raspi-config
+```
 
 ### External Hardware Mounting
 This is to allow the external SSD drive memory to be attached and not freeze the rpi. This does not come default in Lite.
