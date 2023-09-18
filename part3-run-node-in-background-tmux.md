@@ -1,4 +1,4 @@
-# Part 3: Run the node in the background as a tmux session
+# Part 3: Run the node in the background as a tmux session (in-work)
 
 I eventually encountered the problem everytime my computer went to sleep, the terminal ssh session would break and the node would not run and sync in the background.
 
