@@ -27,11 +27,14 @@ ergo {
 scorex {
     restApi {
         # node which exposes restApi in firewall should define publicly accessible URL of it
+        # you will need to enable port forwarding from logging into your router for 9053
         # publicUrl = "http://xxx.xxx.xxx.xxx:9053"
         # apiKeyHash = "CHANGE_ME_HASH"
     }
     network {
-        # declared Address = "xxx.xxx.xxx.xxx:9030"
+        # For below declared address do not include "http://"!
+        # you will need to enable port forwarding from logging into your router for 9030
+        # declaredAddress = "xxx.xxx.xxx.xxx:9030"
         # nodeName = "my-ergo-node"
     }
 }
