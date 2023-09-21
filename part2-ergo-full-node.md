@@ -3,10 +3,9 @@ Time Allotment:
 - 15min-2hr to execute (depending on skill level and snags)
 
 ## Setup & Config
-The following steps are a combination of the following two great resources mixed in with personal comments and notes
+The following steps are a combination of the two great following resources mixed in with notes
 - [Ergo Platform Docs, Node, Install, Pi](https://docs.ergoplatform.com/node/install/pi/#getting-started)
 - [Eeysirhc's ergo-rpi tutorial](https://github.com/Eeysirhc/ergo-rpi/blob/main/docs/ergo-node.md)
-
 
 ### Update the Pi & Install Java
 The node is built with Scala but is run by Java, thus we'll need to install package dependencies Java Development Kit.
@@ -43,7 +42,9 @@ Edit the CONF_SWAPSIZE default value of 100 to 4096 mega bytes
 
 > CONF_SWAPSIZE=4096
 
-Save file with "CTRL + X" then hit "Y" and "ENTER" to confirm
+Save file with "CTRL + X" then hit "Y" for Yes to save, and "ENTER" to confirm.
+
+Turn swapfile on
 
 ```bash
 sudo dphys-swapfile setup
@@ -56,71 +57,50 @@ Reboot to start fresh
 sudo reboot
 ```
 
-
 ## Ergo Node Steps
+The following steps will setup the ergo node's configuration, download the node software ".jar" file, setup and run the node.
 
-Follow:
+We will then check the node is syncing with the Ergo Node Explorer site in the browser.
 
+First, inside the rpi, change directory to home and setup a new ergo folder.
 
+```bash
+cd
+mkdir ergo-node
+cd ergo-node
+```
 
-e.g.
-`wget https://github.com/ergoplatform/ergo/releases/download/v5.0.13/ergo-5.0.13.jar`
+Inside the ergo-node directory, download the node software off [github](https://github.com/ergoplatform/ergo/releases)
 
+```bash
+wget https://github.com/ergoplatform/ergo/releases/download/v<VERSION>/ergo-<VERSION>.jar
+```
+Note: Update the version in the above file. e.g. `wget https://github.com/ergoplatform/ergo/releases/download/v5.0.13/ergo-5.0.13.jar`
 
+Note: GNU Wget is a free utility for non-interactive download of files from the Web. [more](https://www.gnu.org/savannah-checkouts/gnu/wget/manual/wget.html)
 
-ergo {
-  node {
-    mining = false
-  }
-}
+Next, setup the ergo node configuration file
 
-scorex {
- restApi {
-    # Hex-encoded Blake2b256 hash of an API key. 
-    # Should be 64-chars long Base16 string.
-    # below is the hash of the string 'hello'
-    # replace with your actual hash 
-    apiKeyHash = "324dcf027dd4a30a932c441f365a25e86b173defa4b8e58948253471b81b72cf"
-  }
-}
+```bash
+sudo nano ergo.conf
+```
+Note: sudo is super user do (admin privileges). Nano is command line to touch and edit the ergo.conf file. You will now be inside the ergo.conf file. If the file didn't exist, it was just now created.
+
+<reference example file>
+
+Give it a go and run it!
 
 ```bash
 java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf
 ```
-
-e.g `java -jar -Xmx2g ergo-5.0.13.jar --mainnet -c ergo.conf`
-
-
-
-recommend the step-by-step guide
-https://github.com/ergoplatform/ergo/wiki/Set-up-a-full-node
-
-recommend downloading scala package manager
-https://www.scala-sbt.org/download.html
-sbt - scala interactive build tool
-Linux Debian, copy paste code into terminal
-sbt -v  //to check version but also initiates it
-might need to compile jar from a github clone
-had some errors with java memory after sbt -v...
-let's see if it hurts us.
-mkdir github
-git clone https://github.com/ergoplatform/ergo.git
-cd ergo
-//tried ./ergo-installer.sh needed --api-key
-sbt assemble //to build jar file from scratch
-cd //return home
-mkdir ergo
-cd ergo
-mkdir ergo_folder
-cd ergo_folder
-echo " " > ergo.conf //makes empty file
-nano ergo.conf
+Note: Update the version in the command above. e.g `java -jar -Xmx2g ergo-5.0.13.jar --mainnet -c ergo.conf`
 
 ### API Key
 
 http://headless.local:9053/panel
 
-e.g.
+Update hello in the command below with a custom API password.
+
 ```
 curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
 -H "accept: application/json" \
