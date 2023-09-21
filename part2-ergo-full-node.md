@@ -3,34 +3,70 @@ Time Allotment:
 - 15min-2hr to execute (depending on skill level and snags)
 
 ## Setup & Config
-The following steps will install package dependencies like java, and streamline memory
-https://docs.ergoplatform.com/node/install/pi/#getting-started
+The following steps are a combination of the following two great resources mixed in with personal comments and notes
+- [Ergo Platform Docs, Node, Install, Pi](https://docs.ergoplatform.com/node/install/pi/#getting-started)
+- [Eeysirhc's ergo-rpi tutorial](https://github.com/Eeysirhc/ergo-rpi/blob/main/docs/ergo-node.md)
 
-bonus work: recommend do the zram
- - tldr: gets 50% more out of your memory, more efficient solution, backend sharing
-sudo nano zram-swap-config.config
 
-update to recommended parameters per raspi
+### Update the Pi & Install Java
+The node is built with Scala but is run by Java, thus we'll need to install package dependencies Java Development Kit.
 
-java -version //to check install correctly
-sudo reboot //just to make sure everything is good
+Preparation, update and upgrade the rpi. Check Java SDK.
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install default-jdk -y
+```
+
+Install the Java JDK
+
+```bash
+sudo apt install default-jdk
+```
+
+To check java installed properly check the version
+
+```bash
+java -version
+```
+
+### Increase SWAP size
+
+The steps below optimizes your Pi's hardware and extends its operational capabilities for this specific purpose.
+
+```bash
+sudo dphys-swapfile swapoff
+sudo nano /etc/dphys-swapfile
+```
+
+Edit the CONF_SWAPSIZE default value of 100 to 4096 mega bytes
+
+> CONF_SWAPSIZE=4096
+
+Save file with "CTRL + X" then hit "Y" and "ENTER" to confirm
+
+```bash
+sudo dphys-swapfile setup
+sudo dphys-swapfile swapon
+```
+
+Reboot to start fresh
+
+```bash
+sudo reboot
+```
+
 
 ## Ergo Node Steps
 
 Follow:
-https://github.com/Eeysirhc/ergo-rpi/blob/main/docs/ergo-node.md
+
 
 
 e.g.
 `wget https://github.com/ergoplatform/ergo/releases/download/v5.0.13/ergo-5.0.13.jar`
 
-e.g.
-```
-curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
--H "accept: application/json" \
--H "Content-Type: application/json" \
--d "\"hello\""
-```
+
 
 ergo {
   node {
@@ -48,11 +84,13 @@ scorex {
   }
 }
 
+```bash
 java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf
-e.g
-`java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf`
+```
 
-http://headless.local:9053/panel
+e.g `java -jar -Xmx2g ergo-5.0.13.jar --mainnet -c ergo.conf`
+
+
 
 recommend the step-by-step guide
 https://github.com/ergoplatform/ergo/wiki/Set-up-a-full-node
@@ -77,6 +115,18 @@ mkdir ergo_folder
 cd ergo_folder
 echo " " > ergo.conf //makes empty file
 nano ergo.conf
+
+### API Key
+
+http://headless.local:9053/panel
+
+e.g.
+```
+curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
+-H "accept: application/json" \
+-H "Content-Type: application/json" \
+-d "\"hello\""
+```
 
 ### Enable Port Forwarding
 
