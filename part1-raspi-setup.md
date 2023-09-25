@@ -125,7 +125,9 @@ This is a little involved so prepare yourself for battle!
 
 =====Mounting Hard Drive====
 
-#### find the external drive device name
+#### Find the external drive device name
+
+**Plug in the SSD External Hard Drive!**
 
 lists all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
 
@@ -334,7 +336,7 @@ too make sure, we need to reboot
 sudo reboot now 
 ```
 
-ssh back in
+ssh back in (takes 1-3 minutes to reboot)
 ```bash
 ssh pi@headless.local
 ```
@@ -361,9 +363,13 @@ type in `mount` to see everything mounted and the "rw" for read-write.
 mount
 ```
 
-You should see /dev/sda1. Make the mounting directory read-write:
+You should see /dev/sda1 and read-write (rw) capable:
+
+`/dev/sda1 on /mnt/hd1 type ext4 (rw,nosuid,nodev,relatime)`
+
+If it's not rw, make the mounting directory read-write:
 ```bash
-sudo mount -o remount,rw /mnt/hg1
+sudo mount -o remount,rw /mnt/hd1
 ```
 
 This enables you to move files from the home directory to the mounted sda1 storage in `/mnt/hd1`
