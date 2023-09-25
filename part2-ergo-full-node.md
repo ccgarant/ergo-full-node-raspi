@@ -185,9 +185,7 @@ curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
 
 Type in the password in the browser node panel under "API Key". It should work.
 
-### Enable Port Forwarding
+Congrats!! You should see the node syncing now on the Ergo Node Explorer panel.
 
-Per [ErgoNodes.net](http://ergonodes.net/) you'll need to allow port forwarding of your ergo node thru your home router for an incoming and outgoing connection.
-
-https://github.com/Satergo/Satergo/wiki/Initial-node-configuration
+![ergo-node-start-sync](/images/successful_node_running_start.jpeg)
 
