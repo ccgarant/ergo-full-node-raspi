@@ -93,30 +93,257 @@ This is to allow the external SSD drive memory to be attached and not freeze the
 
 For external storage configuration, we'll need to follow the rpi documentation: 
 
-https://www.raspberrypi.com/documentation/computers/configuration.html#external-storage-configuration
+=====Mounting Hard Drive====
 
-Follow the directions for the following sections:
-- Mounting
-- Auto Mounting
-- Unmounting
+#### find the external drive device name
 
-Note, my external storage looked like the following:
-
-From running 
+lsits all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
 
 ```bash
-sudo lsblk -o UUID,NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL,MODEL
+sudo fdisk -l
 ```
 
-My storage was the following:
-- 67E3-17ED //external storage partition ID
-- vfat      //type of storage
+The SATA SSD external memory here is `Disk /dev/sda: 931.51 GiB`. It is identified as `/dev/sda`.
 
-This is what my line looks like in the `sudo nano /etc/fstab` file.
+It is by default listed with two partitions:
 
-`UUID=67E3-17ED /mnt/mydisk vfat defaults,auto,users,rw,nofail 0 0`
+    Device      Start        End    Sectors   Size Type
+    /dev/sda1      40     409639     409600   200M EFI System
+    /dev/sda2  409640 1953525127 1953115488 931.3G Apple APFS
+
+Now we need to delete the partitions and create a new one with a desirable file storage type ext4
+
+#### delete the default partitions
+
+```bash
+sudo fdisk /dev/sda
+```
+
+You should see "Welcome to fdisk (util-linus <version>)"
+
+Type in `d` to delete the partitions (repeat until they are all gone). 
+
+Hit enter to default select the partition to delete.
+
+#### Create new partition with desired file type
+
+Type in `n` to create a new partition.
+
+Hit enter for default 3 times
+
+You should see "Created a new partition 1 of type 'Linux filesystem' and of size 931.5 GiB."
+
+To check, type in `p` for partition. Mine looks like this:
+
+    Command (m for help): p
+    Disk /dev/sda: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+    Disk model: 500SSD1         
+    Units: sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 4096 bytes
+    I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+    Disklabel type: gpt
+    Disk identifier: A59F918E-3EBE-445F-8E0D-951CD93129C8
+
+    Device     Start        End    Sectors   Size Type
+    /dev/sda1   2048 1953525134 1953523087 931.5G Linux filesystem
+
+To confirm, type in `w` to write this to disk.
+
+You should see "The partition table has been altered."
+
+To check:
+
+```bash
+sudo fdisk -l
+```
+
+My final version looks like this. Note the `dev/sda1` Device name and `Disk identifier` number. We'll need those later:
+
+    Disk /dev/sda: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+    Disk model: 500SSD1         
+    Units: sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 4096 bytes
+    I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+    Disklabel type: gpt
+    Disk identifier: A59F918E-3EBE-445F-8E0D-951CD93129C8
+
+    Device     Start        End    Sectors   Size Type
+    /dev/sda1   2048 1953525134 1953523087 931.5G Linux filesystem
+
+#### create a new filesystem
+
+What is a filesystem? [Arch Linux, filesystem, wiki](https://wiki.archlinux.org/title/File_systems#Create_a_file_system), a goto resource says:
+
+    "In computing, a file system or filesystem controls how data is stored and retrieved. Without a file system, information placed in a storage medium would be one large body of data with no way to tell where one piece of information stops and the next begins. By separating the data into pieces and giving each piece a name, the information is easily isolated and identified." 
+
+Let's make the filesystem of storage an `ext4` type compatible with rpi OS / linux.
+
+```bash
+sudo mkfs -t ext4 /dev/sda1
+```
+
+Where `dev/sda1` is the new partition name pointer.
+
+#### mount the drive and ensure it mounts on restart
+If not already create, make a "mount" /mnt directory, and name a file within, here hd1 for harddrive1.
+
+```bash
+sudo mkdir /mnt/hd1
+```
+
+Next, change the permissions or ownership of the folder from super user root to regular user. 
+
+```bash
+sudo chown $USER:$USER /mnt/hd1
+```
+
+Note: 
+- [chmod](https://en.wikipedia.org/wiki/chown) is the command to "change owner" or access to file systems.
+- pi:pi in this tutorial is specific for user:user, where user:user is the general case. If not sure, type in `users` in terminal.
+
+```bash
+sudo blkid
+```
+
+Where [blkid](https://man7.org/linux/man-pages/man8/blkid.8.html) locates or prints block devices. A [block device](https://unix.stackexchange.com/questions/259193/what-is-a-block-device) reads/writes to memory one "block" at a time.
+
+Grab the `/dev/sda1` UUID #
+
+Here's what my output looks like:
+
+    pi@headless:/mnt $ sudo blkid
+    /dev/mmcblk0p1: LABEL_FATBOOT="bootfs" LABEL="bootfs" UUID="9E81-4F92" BLOCK_SIZE="512" TYPE="vfat" PARTUUID="2ac7bef0-01"
+    /dev/mmcblk0p2: LABEL="rootfs" UUID="cf2895ca-6dc2-4797-8040-f76ba1508f41" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="2ac7bef0-02"
+    /dev/zram0: UUID="9ba6ae2f-9e71-4ee1-84f3-b5a32d78cf7f" TYPE="swap"
+    /dev/sda1: UUID="38e049f5-e511-49a3-a784-f8dad186303c" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="17672728-73c0-ad44-b194-941fcccad345"
+    
+Specifically `38e049f5-e511-49a3-a784-f8dad186303c`
+
+Time to mount. What is mounting a drive? [Stackexchange](https://unix.stackexchange.com/questions/3192/what-is-meant-by-mounting-a-device-in-linux) says:
+
+    "Mounting is the act of associating a storage device to a particular location in the directory tree."
+
+```bash
+sudo nano /etc/fstab
+```
+
+This gets inside the file to locate the mounted memory storage partition.
+
+[fstab](https://wiki.archlinux.org/title/Fstab) is used to define how disk partitions, various other block devices, or remote file systems should be mounted into the file system.
+
+```bash
+UUID=<UUID_number_here> /mnt/hd1 ext4 nosuid,nodev,nofail 0 1
+```
+
+For me it is `UUID=38e049f5-e511-49a3-a784-f8dad186303c /mnt/hd1 ext4 nosuid,nodev,nofail 0 1`
+
+nofail allows the server to boot if the drive is not inserted. Similar for the others.
+
+```bash
+sudo mount -a
+```
+
+To execute everything in the fstab file
+
+```bash
+lsblk
+```
+
+Lists the memory
+
+    pi@headless:~ $ lsblk
+    NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+    sda           8:0    0 931.5G  0 disk 
+    └─sda1        8:1    0 931.5G  0 part /mnt/hd1
+    mmcblk0     179:0    0  29.8G  0 disk 
+    ├─mmcblk0p1 179:1    0   256M  0 part /boot
+    └─mmcblk0p2 179:2    0  29.6G  0 part /
+    zram0       254:0    0   5.7G  0 disk [SWAP]
+
+sda1 looks good
+
+To check the read write works
+
+```bash
+cd /mnt/hd1/
+```
+```bash
+touch test 
+```
+
+you'll get `touch: cannot touch 'test': Permission denied`
+
+so `cd` up a level
+
+```bash
+cd ..
+```
+
+and change mode on the directory
+
+```bash
+sudo chmod -R 777 hd1 
+```
+
+changes permissions in directory hd1 to read write 
+
+To test it works
+
+```bash
+cd hd1 
+```
+```bash
+touch test
+```
+
+it should work now
+
+too make sure, we need to reboot
+
+```bash
+sudo reboot now 
+```
+
+ssh back in
+```bash
+ssh pi@headless.local
+```
+
+```bash
+cd /mnt/hd1 
+```
+
+```bash
+touch test2
+```
+
+```bash
+ls
+```
+
+if you see "test" and "test2", you did it right.
+
+Now, the last thing is to make sure the newly mounted filesystems are read-write.
+
+type in `mount` to see everything mounted and the "rw" for read-write.
+
+```bash
+mount
+```
+
+You should see /dev/sda1. Make the mounting directory read-write:
+```bash
+sudo mount -o remount,rw /mnt/hg1
+```
+
+This enables you to move files from the home directory to the mounted sda1 storage in `/mnt/hd1`
+
+Congrats! You made it. No small feat.
 
 
-
+### References:
+- [Youtube, Connect a HardDrive / USB Stick on a RaspberryPi (From Terminal) | 4K TUTORIAL, by SpaceRex](https://youtu.be/eQZdPlMH-X8?si=my9CWTv5gJ82yXq_)
+- [Armada Alliance Doc, Pi-Node, Mount the drive at boot](https://armada-alliance.com/docs/stake-pool-guides/pi-pool-tutorial/pi-node-full-guide/core-online#mount-the-drive-at-boot)
+- [Digikey how to mount an external harddrive](https://www.digikey.com/en/maker/blogs/2022/how-to-connect-a-drive-hddssd-to-a-raspberry-pi-or-other-linux-computers)
 
 

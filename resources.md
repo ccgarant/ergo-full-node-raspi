@@ -49,3 +49,7 @@ This is a cheat sheet list of references.
     - Has ledger cold storage integration too.
 
 - [Ergo Platform full list of wallets](https://ergoplatform.org/en/get-erg/#Wallets)
+
+## Linux
+
+- [Arch Linux](https://archlinux.org/), use the wiki
