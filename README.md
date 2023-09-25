@@ -34,6 +34,11 @@ The tutorial includes:
 - Robustly configure the rpi to run the node upon startup, restart, and in the background
 - Port forwarding to get incoming peer connections (not just outgoing).
 
+## [Part 5: Satergo Wallet Full Node Wallet Setup](/part5-setup-satergo-full-node-wallet.md)
+- Setup wallet in the Ergo Node Explorer
+- Setup wallet in Satergo w/ remote node into the rpi
+- Enjoy the beautiful Satergo wallet gui on your local machine
+
 ## [Ergo Full Node Resources](/resources.md)
 A cheatsheet and comprehensive list of references.
 
