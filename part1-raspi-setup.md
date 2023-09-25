@@ -83,9 +83,6 @@ cd to home, then cd into the hidden `.ssh` folder
 
 ```bash
 cd
-```
-
-```bash
 cd .ssh
 ```
 
@@ -114,6 +111,7 @@ sudo apt-get update
 sudo apt-get upgrade 
 ```
 This is where most of the configuration is done for the rpi. Feel free to explore it.
+
 ```bash
 sudo raspi-config
 ```
@@ -298,22 +296,15 @@ To check the read write works
 
 ```bash
 cd /mnt/hd1/
-```
-```bash
 touch test 
 ```
 
 you'll get `touch: cannot touch 'test': Permission denied`
 
-so `cd` up a level
+so `cd` up a level and change mode on the directory
 
 ```bash
 cd ..
-```
-
-and change mode on the directory
-
-```bash
 sudo chmod -R 777 hd1 
 ```
 
@@ -323,8 +314,6 @@ To test it works
 
 ```bash
 cd hd1 
-```
-```bash
 touch test
 ```
 
@@ -343,17 +332,11 @@ ssh pi@headless.local
 
 ```bash
 cd /mnt/hd1 
-```
-
-```bash
 touch test2
-```
-
-```bash
 ls
 ```
 
-if you see "test" and "test2", you did it right.
+If you see "test" and "test2", you did it right.
 
 Now, the last thing is to make sure the newly mounted filesystems are read-write.
 

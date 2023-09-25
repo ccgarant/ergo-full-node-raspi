@@ -1,7 +1,7 @@
 ergo {
     node {
         mining = false
-        extraIndex = true
+        extraIndex = false
         utxo {
             # Download and apply UTxO set snapshot and full-blocks after that
             utxoBootstrap = false
