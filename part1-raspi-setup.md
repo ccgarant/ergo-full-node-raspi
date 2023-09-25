@@ -24,10 +24,10 @@ Time Allotment:
     - Just make sure the case is a good heat sink, has a fan, or airflow.
 
 
-## Setup & Configuration
+# Setup & Configuration
 
 
-### SD Card Flashing Setup
+## SD Card Flashing Setup
 This part covers "flashing" (writing) the SD Card with the Operating System (OS) into firmware memory.
 
 Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (I used macbook pro which has an SD Flash drive).
@@ -36,18 +36,27 @@ You could follow the [Raspberry Pi Documentation: Installing the Operating Syste
 
 [Youtube: Headless Raspberry Pi Zero Setup](https://youtu.be/wQJqwGVNHTM?si=GzJZh4_am2cLS1gL)
 
-- Choose Raspberry Pi OS Lite 32bit
+- Choose Raspberry Pi OS **Lite** 32bit under "Raspberry Pi OS (other)"
+    - 64-bit is faster and is also a good option. Just not tested.
+    - Lite for headless (no Desktop GUIs)
 - Choose SD Card to write to
 - Bottom right click gear for advanced settings options
-- Rename raspberrypi (used "headless")
-- Ssh enable with password
-    - Select password auth. Use custom password (to be used to get in via ssh later as 2 factor authentication)
-- Update username (used "pi")
-- Enable it to connec to the wifi
+- Set hostname, rename raspberrypi to **"headless"**
+    - you can use your own username but the headless is used in this tutorial
+- Yes Enable SSH
+- Yes "Use password authentication"
+- Fill in username and password to login to the rpi.
+- Update username to **"pi"**
+- Yes Enable it to connec to the wifi
     - Note SSID is "wifi name"
+    - Type in the password
+- Save
+- Write
+
+The first time takes a few minutes
 
 ### Hardware Assembly & Checking Pi IP Address
-Assembly the rpi and connect it to your router.
+Assembly the rpi and connect it to your router. Trust me this saves time because you'll check your router for headless.local IP address.
 
 **⚠️ WARNING: For external SSD USB storage, do not plug it in yet, it freezes your pi on power up. Setup for this is later.**
 - Put the pi in the case
@@ -66,38 +75,59 @@ Secure shell into the rpi, if setup correctly this should work.
 ```bash
 ssh pi@headless.local
 ```
-- if there were failed attempts, in terminal:
+Recall `pi` is the username and `headless.local` is the IP address.
+
+If you get this warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" Odds are you already have known ssh keys into the pi. You'll need to delete them and basically start fresh.
+
+cd to home, then cd into the hidden `.ssh` folder
+
+```bash
+cd
+```
+
+```bash
+cd .ssh
+```
+
+Next you'll open the known_hosts folder which keeps the username public keys. You'll then delete all the former pi@headless.local logins
+
+```bash
+sudo nano known_hosts
+```
+
+`Ctrl+k` on the lines with headless to wipe them out (nice little trick).
+
+If there are still ssh failed attempts, in terminal:
     - cd //to home folder (directory)
     - cd .ssh //directories with a dot in front are hidden
     - nano known_hosts //to check ssh connections
     - (need to troubleshoot further...)
     - ssh? [Article: What is SSH?](https://www.makeuseof.com/what-is-ssh/)
 
-Update the pi packages
-```bash
-sudo apt-get update  
-```
 
-Upgrade the pi with updates
+### Update the pi and config updates
+
+Update & upgrade the pi packages
+
 ```bash
+sudo apt-get update
 sudo apt-get upgrade 
 ```
-
 This is where most of the configuration is done for the rpi. Feel free to explore it.
 ```bash
 sudo raspi-config
 ```
 
-### External Hardware Mounting
+## External Hardware Mounting
 This is to allow the external SSD drive memory to be attached and not freeze the rpi. This does not come default in Lite.
 
-For external storage configuration, we'll need to follow the rpi documentation: 
+This is a little involved so prepare yourself for battle!
 
 =====Mounting Hard Drive====
 
 #### find the external drive device name
 
-lsits all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
+lists all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
 
 ```bash
 sudo fdisk -l
