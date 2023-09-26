@@ -15,18 +15,46 @@ In reality, you only need to know about 5 things.
 
 Here's a video my super hacker brother shared with me:
 
-[![Tmux has forever changed the way I write code.](https://www.youtube.com/watch?v=DzNmUNvnB04/default.jpg)](https://www.youtube.com/watch?v=DzNmUNvnB04)
+[![Tmux has forever changed the way I write code.](/images/tmux-youtube-shot.jpeg)](https://www.youtube.com/watch?v=DzNmUNvnB04)
 
 In reality, you only need to know the basics, about 5 things, and level up from there.
 
 
 ## Installation
 
+From your **local machine**, that is, not the rpi, install tmux.
+
 For rpi linux, we can download tmux using pacman that package manager
+
+Note, we'll need to download dependancies
 
 ```bash
 sudo pacman -S tmux
 ```
+
+Or find your package manager for your OS here:
+
+https://github.com/tmux/tmux/wiki/Installing
+
+E.g. for macOS `brew install tmux`
+
+Else: you'll need to download dependancies from the tmux manually from the readme:
+- libevent
+- ncurses
+
+Test: 
+```bash
+git clone https://github.com/tmux/tmux.git
+cd tmux
+sh autogen.sh
+./configure && make
+```
+
+WARNING: If you run the above and the last line has
+
+>configure: error: "libevent not found"
+
+You need to download the dependencies.
 
 From here, we'll need some pluggins to make it run smooth and nicely:
 
@@ -39,13 +67,14 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 Next, create the configuration file
 
 ```bash
-cd .config
-mkdir tmux
-cd tmux
-touch nano tmux.conf
+cd
+touch .tmux.conf
+nano .tmux.conf
 ```
 
-copy the following into tmux.conf per the tpm instructions
+Note: this is tricky. Some versions have making this file in `.config/tmux/tmux.conf`
+
+copy the following into .tmux.conf per the tpm instructions
 
 ```bash
 # List of plugins
@@ -62,7 +91,9 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 run '~/.tmux/plugins/tpm/tpm'
 ```
 
-Re source the config file so it is recognized.
+Ctrl+X to exit and yes to overwrite and save.
+
+Next, resource the config file so it is recognized.
 
 ```bash
 tmux source ~/.tmux.conf
