@@ -1,32 +1,53 @@
 # Part 3: Run the node in the background as a tmux session (in-work)
 
-I eventually encountered the problem everytime my computer went to sleep, the terminal ssh session would break and the node would not run and sync in the background.
+I eventually encountered the problem everytime my computer went to sleep, say on the macbook laptop, the terminal ssh session would break and the node would not run and sync in the background.
 
-I was given advice that an easy fix was to "tmux it" for running in the background. 
+I was given advice that an easy fix was to ***"tmux it"*** for running in the background by [@Wael of PIADA Stake Pool founder of Armada Alliance](https://twitter.com/Piada_stakePool).
 
 This was brand new to me and required a bit of an overwhelming learning curve that now seems simple and really is great to know.
 
+In reality, you only need to know about 5 things.
+
+## So what is Tmux?
+[Tmux on Github](https://github.com/tmux/tmux) describes their projects as:
+
+>tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen. tmux may be detached from a screen and continue running in the background, then later reattached.
+
+Here's a video my super hacker brother shared with me:
+
+[![Tmux has forever changed the way I write code.](https://www.youtube.com/watch?v=DzNmUNvnB04/default.jpg)](https://www.youtube.com/watch?v=DzNmUNvnB04)
+
+In reality, you only need to know the basics, about 5 things, and level up from there.
 
 
-https://www.youtube.com/watch?v=DzNmUNvnB04
+## Installation
 
-https://github.com/tmux/tmux
+For rpi linux, we can download tmux using pacman that package manager
 
+```bash
 sudo pacman -S tmux
+```
 
-https://github.com/tmux-plugins/tpm
+From here, we'll need some pluggins to make it run smooth and nicely:
 
+Basically, follow the steps from [Github tmux-plugins](https://github.com/tmux-plugins/tpm)
+
+```bash
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
 
+Next, create the configuration file
+
+```bash
 cd .config
 mkdir tmux
 cd tmux
-echo " " > tmux.conf
-nano tmux.conf
+touch nano tmux.conf
+```
 
 copy the following into tmux.conf per the tpm instructions
 
-```
+```bash
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
@@ -41,10 +62,18 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 run '~/.tmux/plugins/tpm/tpm'
 ```
 
-#run tmux
-tmux  //in terminal
+Re source the config file so it is recognized.
 
-# type this in terminal if tmux is already running
+```bash
 tmux source ~/.tmux.conf
+```
+
+Finally, run tmux
+
+```bash
+tmux  //in terminal
+```
+
+Here's a handy cheatsheet for working with tmux:
 
 https://tmuxcheatsheet.com/
