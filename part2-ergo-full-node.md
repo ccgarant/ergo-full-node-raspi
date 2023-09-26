@@ -1,4 +1,4 @@
-# Part 2: Ergo Full Node Setup (in-work)
+# Part 2: Ergo Full Node Setup
 Time Allotment:
 - 15min-2hr to execute (depending on skill level and snags)
 

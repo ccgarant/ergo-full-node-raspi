@@ -1,4 +1,4 @@
-# Part 3: Run the node in the background as a tmux session (in-work)
+# Part 3: Run the Node in the Background as a tmux Session
 
 I eventually encountered the problem everytime my computer went to sleep, say on the macbook laptop, the terminal ssh session would break and the node would not run and sync in the background.
 
@@ -102,9 +102,81 @@ tmux source ~/.tmux.conf
 Finally, run tmux
 
 ```bash
-tmux  //in terminal
+tmux
 ```
 
-Here's a handy cheatsheet for working with tmux:
+## Get into the rpi with tmux session
+
+Now let's get into the rpi thru tmux and do some practice work.
+
+From a tmux session that we started above, it should have a solid green bar at the bottom.
+
+![tmux-example](/images/tmux-example.jpeg)
+
+Let's get into the rpi
+
+```bash
+ssh pi@headless.local
+```
+
+Type in the password
+
+```bash
+cd /mnt/hd1
+```
+
+To where we are storing the node mounted on the external SSD drive.
+
+
+Now, here's a handy cheatsheet for working with tmux. Open it up.
 
 https://tmuxcheatsheet.com/
+
+Let's rename this session. You'll have to input this manaully in the keyboard.
+
+`ctrl+b` then `$` (that's right, ctrl+b, then separately, shift+4)
+
+Type in `ergo-node` and hit enter. The bottom green bar should be updated with the name.
+
+To list the sessions:
+
+`ctrl+b` then `s`. Hit `q` to quit and exit.
+
+If your node is already sync'ing, but you don't see it here, break it.
+
+`ctrl+c` or `ctrl+.`
+
+Now, in the terminal window, open a new tab.
+
+`ctrl+t`
+
+You may have to ssh back in and get back to `/mnt/hd1` directory.
+
+Attach to the tmux ergo-node session. This will be a read-only live view tab.
+
+```bash
+tmux a -t ergo-node
+```
+Make sure both tabs are in the `/mnt/hd1` directory.
+
+Let's restart the node sync'ing in this tmux ergo-node session to see it live.
+
+```bash
+java -jar -Xmx2g ergo-5.0.14.jar --mainnet -c ergo.conf
+```
+
+You should see the node sync'ing in each terminal tab.
+
+Now from one of the terminal tabs, detach.
+
+`ctrl+b` then `d` to detach.
+
+It should reflect your local terminal tab now (exited out).
+
+In the other tab, you should see a live read-only view of the node syncing.
+
+Congrats, you are now running the ergo-node sync as a tmux session in the background!
+
+
+
+

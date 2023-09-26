@@ -32,7 +32,7 @@ The tutorial includes:
 
 ## [Part 4: Robustly run the node in the background as a systemd](/part4-robust-run-node-in-background-systemd.md)
 - Robustly configure the rpi to run the node upon startup, restart, and in the background
-- Port forwarding to get incoming peer connections (not just outgoing).
+- Port forwarding to get incoming peer connections (not just outgoing)
 
 ## [Part 5: Satergo Wallet Full Node Wallet Setup](/part5-setup-satergo-full-node-wallet.md)
 - Setup wallet in the Ergo Node Explorer
