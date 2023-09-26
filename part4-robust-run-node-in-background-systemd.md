@@ -16,7 +16,10 @@ Hat tip to Chris for the great tutorial, largely adapted here with notes.
 Ideally, your Ergo services run in the background and automatically reboots in the event of an outage. The steps below is one example on how to setup this process for the node on your Raspberry Pi.
 
 ### What is systemd service?
+[Arch Linux Wiki](https://wiki.archlinux.org/title/Systemd) explains:
+>Historically, what systemd calls "service" was named daemon: any program that runs as a "background" process (without a terminal or user interface), commonly waiting for events to occur and offering services. A good example is a web server that waits for a request to deliver a page, or a ssh server waiting for someone trying to log in. While these are full featured applications, there are daemons whose work is not that visible. Daemons are for tasks like writing messages into a log file (e.g. syslog, metalog) or keeping your system time accurate (e.g. ntpd). For more information see daemon(7)
 
+System Control [systemctl](https://man.archlinux.org/man/systemctl.1) - Control the systemd system and service manager, may be used to introspect and control the state of the "systemd" system and service manager.
 
 ### Create service
 
