@@ -12,3 +12,6 @@ https://github.com/Eeysirhc/ergo-rpi#readme
 In terminal `htop` to see the systemd services (and more).
 
 Enjoy.
+
+
+## Monitoring and Common Troubleshooting

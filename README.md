@@ -25,7 +25,7 @@ The tutorial includes:
     - goal is for nipopow bootstrap setup
 - Run the node in the background thru a tmux session
 
-## [Part 3: Run the Node in the background to fully sync](/part3-run-node-in-background-tmux.md)
+## [Part 3: Run the Node in the Background as a tmux Session](/part3-run-node-in-background-tmux.md)
 - Why is this needed (ssh connection breaks when computer sleeps)
 - What is a tmux session?
 - Run the node syncing in the background as a tmux session
@@ -75,3 +75,11 @@ Appreciate the help from the following folks and resources!
 - [Satergo Project](https://twitter.com/SatergoWallet) for an awesome full node ergo wallet and ergonodes.net platform
 - [Ergo Foundation](https://twitter.com/ErgoFoundation) for the continuous AMA's teaching grassroot decentralization matters
 - [Kushti](https://twitter.com/chepurnoy) for relentless unstoppable building
+
+-------------
+
+If you find this tutorial helpful, here's my donation tip jar! #Ergo2Top10
+
+![donations-qr-code](/images/wallet-qr-code.jpeg)
+
+Or better yet, if an $ADA hodler too, Stake to [BALNC Pool](https://pool.pm/a43ceac028a673e9f8611de0f683c70fdcadde560f28c2fb8cfabc81)! We provide high quality on-chain analysis and data visualization using Svelte: https://www.balanceanalytics.io/. Cheers!

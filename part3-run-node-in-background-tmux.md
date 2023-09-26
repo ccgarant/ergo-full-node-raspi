@@ -177,6 +177,8 @@ In the other tab, you should see a live read-only view of the node syncing.
 
 Congrats, you are now running the ergo-node sync as a tmux session in the background!
 
+![tmux-read-only-view](/images/tmux-read-only-screen.jpeg)
+
 
 
 
