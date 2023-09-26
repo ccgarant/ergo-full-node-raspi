@@ -10,9 +10,10 @@ After               =network-online.target
 User                =pi
 Type                =simple
 
-#note path/to/ergo-node in this tutorial is /mnt/hd1/ergo-node
-WorkingDirectory    =/path/to/ergo-node
+#note path/to/ergo-node in this tutorial is /mnt/hd1/ergo-node but in general =/path/to/ergo-node
+WorkingDirectory    =/mnt/hd1/ergo-node
 
+                    #update the version!!!
 ExecStart           =/usr/bin/java -jar -Xmx2g ergo-<VERSION>.jar --mainnet -c ergo.conf
 KillSignal          =SIGINT
 RestartKillSignal   =SIGINT
@@ -20,7 +21,7 @@ TimeoutStopSec      =10
 LimitNOFILE         =32768
 Restart             =always
 RestartSec          =10
-#EnvironmentFile    =-/home/ada .adaenv
+#EnvironmentFile    =
 
 [Install]
 WantedBy            =multi-user.target
