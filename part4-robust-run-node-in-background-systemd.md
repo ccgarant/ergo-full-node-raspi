@@ -24,7 +24,7 @@ System Control [systemctl](https://man.archlinux.org/man/systemctl.1) - Control 
 ### Create service
 
 ```bash
-sudo nano /etc/systemd/system/ergonode.service
+sudo nano /etc/systemd/system/ergo-node.service
 ```
 
 ### Edit service file
@@ -62,15 +62,15 @@ WantedBy            =multi-user.target
 ### Grant permissions
 
 ```bash
-sudo chmod 644 /etc/systemd/system/ergonode.service 
+sudo chmod 644 /etc/systemd/system/ergo-node.service 
 ```
 
 ### Update systemd
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable ergonode.service
-sudo systemctl start ergonode.service
+sudo systemctl enable ergo-node.service
+sudo systemctl start ergo-node.service
 ```
 
 ## Monitoring and Common Troubleshooting

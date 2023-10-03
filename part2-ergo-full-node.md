@@ -113,6 +113,7 @@ Copy and paste the contents of the [Reference ergo.conf example file](/example_e
         node {
             mining = false
             extraIndex = false
+            
             utxo {
                 # Download and apply UTxO set snapshot and full-blocks after that
                 utxoBootstrap = false
@@ -158,6 +159,7 @@ You'll need to make the following updates:
   - declared address - update
   - nodeName - update
 
+For light weight full node using bootstrapping and NiPoPow, see [example_ergo_config_file_light.txt](/example_ergo_config_file_light.txt)
 
 Give it a go and run it! Ctrl+X to overwrite and Yes enter to save.
 
