@@ -80,6 +80,11 @@ Appreciate the help from the following folks and resources!
 
 If you find this tutorial helpful, here's my donation tip jar! #Ergo2Top10
 
+
 ![donations-qr-code](/images/wallet-qr-code.jpeg)
+
+```bash
+9htXsxhTNpt8LaSdLF5PDqNe99RaXmMRTAJu3iTB57ivxx3UNFa
+```
 
 Or better yet, if an $ADA hodler too, Stake to [BALNC Pool](https://pool.pm/a43ceac028a673e9f8611de0f683c70fdcadde560f28c2fb8cfabc81)! We provide high quality on-chain analysis and data visualization using Svelte: https://www.balanceanalytics.io/. Cheers!
