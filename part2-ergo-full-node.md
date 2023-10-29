@@ -9,11 +9,13 @@ The following steps are a combination of the two great following resources mixed
 
 ### Update the Pi & Install Java
 
-**Important:** Start out in the `/mnt/hd1` directory, this is the external ssd hard drive, with the tons of memory for the ergo-node. Else, you will quickly overload your sd card memory and crash the pi soon enough (trust me :)
+---
+**Important: SKIP This Step UNLESS you boot from the SD Card**: You'll want to start out in the `/mnt/hd1` as your "home" directory, this is the external ssd hard drive, with the tons of memory for the ergo-node. It is not mentioned in the rest of the tutorial because it assumes directly mounting.
 
 ```bash
 cd /mnt/hd1
 ```
+---
 
 The node is built with Scala but is run by Java, thus we'll need to install package dependencies Java Development Kit.
 
@@ -78,7 +80,6 @@ ssh pi@headless.local
 Then once inside the rpi, change directory to the external hard drive location **very important** /mnt/hd1 and setup a new ergo folder.
 
 ```bash
-cd /mnt/hd1
 mkdir ergo-node
 cd ergo-node
 ```

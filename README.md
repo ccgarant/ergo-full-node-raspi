@@ -78,8 +78,9 @@ Appreciate the help from the following folks and resources!
 
 -------------
 
-If you find this tutorial helpful, here's my donation tip jar! #Ergo2Top10
+## Donations or Staking
 
+If you find this tutorial helpful, here's my donation tip jar! #Ergo2Top10
 
 ![donations-qr-code](/images/wallet-qr-code.jpeg)
 
@@ -88,3 +89,6 @@ If you find this tutorial helpful, here's my donation tip jar! #Ergo2Top10
 ```
 
 Or better yet, if an $ADA hodler too, Stake to [BALNC Pool](https://pool.pm/a43ceac028a673e9f8611de0f683c70fdcadde560f28c2fb8cfabc81)! We provide high quality on-chain analysis and data visualization using Svelte: https://www.balanceanalytics.io/. Cheers!
+
+## Questions?
+Feel free to jump into our [Ergo - BALANCE](https://matrix.to/#/#ergo:forum.balanceanalytics.io) room to chat and ask questions. This chat is in the Matrix.org open source commmunication protocol, we recommend using the Element Client.
