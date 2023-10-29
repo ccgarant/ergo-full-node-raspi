@@ -26,44 +26,46 @@ Time Allotment:
 
 # Setup & Configuration
 
+## Operating System (OS) Flashing Setup
 
-## SD Card Flashing Setup
-This part covers "flashing" (writing) the SD Card with the Operating System (OS) into firmware memory.
+This part covers "flashing" (writing) the raspberry pi Operating System (OS) into firmware memory.
 
-Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (I used macbook pro which has an SD Flash drive).
+*💡 HEADS-UP: The first tutorial trials flashed the OS right to the SD Card. It quickly became apparent the RAM & Log storage filled up the SD Card memory (30MB). In fact, you can actually flash and boot up right into the external USB storage drive, no mounting required either!*
 
-You could follow the [Raspberry Pi Documentation: Installing the Operating System](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system), however I found watching the following youtube video much more helpful and easier:
+Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
 
-[Youtube: Headless Raspberry Pi Zero Setup](https://youtu.be/wQJqwGVNHTM?si=GzJZh4_am2cLS1gL)
+You could follow the [Raspberry Pi Documentation: Installing the Operating System](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system), however I found watching the following youtube video much more helpful and easier to get an idea of what we're doing: [Youtube: Headless Raspberry Pi Zero Setup](https://youtu.be/wQJqwGVNHTM?si=GzJZh4_am2cLS1gL).
 
-- Choose Raspberry Pi OS **Lite** 32bit under "Raspberry Pi OS (other)"
-    - 64-bit is faster and is also a good option. Just not tested.
+- Open the Raspberry Pi Imager GUI
+- Choose Raspberry Pi OS **Lite** 64bit under "Raspberry Pi OS (other)"
+    - 32-bit is the safe option. Seems 64bit OS is compatible and tested with the 3b+
     - Lite for headless (no Desktop GUIs)
-- Choose SD Card to write to
+- Plug in the external USB storage drive
+- Choose the external memory to write to in the rpi GUI
 - Bottom right click gear for advanced settings options
 - Set hostname, rename raspberrypi to **"headless"**
     - you can use your own username but the headless is used in this tutorial
 - Yes Enable SSH
 - Yes "Use password authentication"
 - Fill in username and password to login to the rpi.
-- Update username to **"pi"**
+- Update username to **"pi"** (or whatever name you want but pi is used here)
 - Yes Enable it to connec to the wifi
-    - Note SSID is "wifi name"
+    - Note SSID is home "wifi name"
     - Type in the password
 - Save
 - Write
 
-The first time takes a few minutes
+The first time takes a few minutes, grab a coffee ☕
 
 ### Hardware Assembly & Checking Pi IP Address
-Assembly the rpi and connect it to your router. Trust me this saves time because you'll check your router for headless.local IP address.
+Assembly the rpi and connect it to your router. Trust me this saves time because you'll check your router for headless.local IP address. 
 
-**⚠️ WARNING: For external SSD USB storage, do not plug it in yet, it freezes your pi on power up. Setup for this is later.**
+However, upon boot up it should connect on your wifi, and from your router page, you should be able to find it connected. (Type in your router 192.168.XXX.YYY into your browser).
+
 - Put the pi in the case
-- Put the micro SD card in in rpi
-- Connect it to power
+- Connect the flashed memory into in rpi
+- Connect the rpi to power
 - Connect it to your Internet Router hardlined via ethernet connection (easier to troubleshoot, can do wifi later)
-- Put the SSD Drive into the case, but do not connect it to the rpi yet!
 - Pi takes about 5 minutes to boot up. Wait 5 minutes before trying to ssh in.
 
 ### Getting into your rpi
@@ -115,9 +117,20 @@ This is where most of the configuration is done for the rpi. Feel free to explor
 ```bash
 sudo raspi-config
 ```
+Congrats! That's it (much easier to boot right from the external memory, already mounted and partitioned).
 
-## External Hardware Mounting
+---------------------
+
+
+## External Hardware Mounting if booting from the SD Card
+
+***IF*** you chose the hard route, flashing and booting from the SD Card and using a separate external USB memory storage, you'll have to perform these steps.
+
 This is to allow the external SSD drive memory to be attached and not freeze the rpi. This does not come default in Lite.
+
+You'll probably notice your rpi did not boot up if you booted from the SD Card and have the external memory already connected.
+
+You'll need to reboot (remove power) and disconnect the USB memory. Then start up.
 
 This is a little involved so prepare yourself for battle!
 
@@ -125,9 +138,7 @@ This is a little involved so prepare yourself for battle!
 
 #### Find the external drive device name
 
-**Plug in the SSD External Hard Drive!**
-
-lists all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
+Lists all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
 
 ```bash
 sudo fdisk -l
@@ -138,10 +149,9 @@ The SATA SSD external memory here is `Disk /dev/sda: 931.51 GiB`. It is identifi
 It is by default listed with two partitions:
 
     Device      Start        End    Sectors   Size Type
-    /dev/sda1      40     409639     409600   200M EFI System
-    /dev/sda2  409640 1953525127 1953115488 931.3G Apple APFS
+    /dev/sda   409640 1953525127 1953115488 931.3G ext4
 
-Now we need to delete the partitions and create a new one with a desirable file storage type ext4
+Now we need to delete the partitions and create a new one with a desirable file storage type ext4 just in case it's not already ext4.
 
 #### delete the default partitions
 

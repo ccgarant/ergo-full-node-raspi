@@ -43,7 +43,7 @@ User                =pi
 Type                =simple
 
 #note path/to/ergo-node in this tutorial is /mnt/hd1/ergo-node but in general =/path/to/ergo-node
-WorkingDirectory    =/mnt/hd1/ergo-node
+WorkingDirectory    =/ergo-node
 
                     #update the version!!!
 ExecStart           =/usr/bin/java -jar -Xmx2g ergo-<VERSION>.jar --mainnet -c ergo.conf
