@@ -1,5 +1,7 @@
 # Part 3: Run the Node in the Background as a tmux Session
 
+***Recommend skipping Part 3 and move to Part 4 for most robust (and simpler) solution to keeping Ergo Node running in the background***
+
 I eventually encountered the problem everytime my computer went to sleep, say on the macbook laptop, the terminal ssh session would break and the node would not run and sync in the background.
 
 I was given advice that an easy fix was to ***"tmux it"*** for running in the background by [@Wael of PIADA Stake Pool founder of Armada Alliance](https://twitter.com/Piada_stakePool).
