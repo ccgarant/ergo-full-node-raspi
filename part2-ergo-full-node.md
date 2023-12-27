@@ -16,7 +16,7 @@ The following steps are a combination of the two great following resources mixed
 cd /mnt/hd1
 ```
 ---
-
+**Important: Whether or not you boot from the SD Card, complete the rest of these steps**
 The node is built with Scala but is run by Java, thus we'll need to install package dependencies Java Development Kit.
 
 Preparation, update and upgrade the rpi. Check Java SDK.
@@ -94,7 +94,7 @@ wget https://github.com/ergoplatform/ergo/releases/download/v<VERSION>/ergo-<VER
 Note: Update the version in the above file. For copy and paste ease:
 
 ```bash
-wget https://github.com/ergoplatform/ergo/releases/download/v5.0.14/ergo-5.0.14.jar
+wget https://github.com/ergoplatform/ergo/releases/download/v5.0.18/ergo-5.0.18.jar
 ```
 
 This will take a few minutes.
@@ -156,13 +156,15 @@ You'll need to make the following updates:
 - extraIndex ?: If true, will basically store extra blockchain data
 - Under scorex
   - publicUrl - update
-  - apiKeyHash - update
+  - apiKeyHash - update (use http://128.253.41.49:9053/swagger#/utils/hashBlake2b to generate hash - don't worry, you can       change this at any time - click 'Try Out', then enter your made up API password in the Request Body within the " " then     click 'Execute' - your apiKeyHash is the 64 character hash in the parenthesis Response - include parenthesis in             ergo.config file)
   - declared address - update
   - nodeName - update
 
 For light weight full node using bootstrapping and NiPoPow, see [example_ergo_config_file_light.txt](/example_ergo_config_file_light.txt)
 
-Give it a go and run it! Ctrl+X to overwrite and Yes enter to save.
+Ctrl+X to overwrite config file and Yes, then enter to save.
+
+Give it a go and run it by using the command below:
 
 ```bash
 java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf
