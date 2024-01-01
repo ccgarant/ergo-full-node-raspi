@@ -1,4 +1,6 @@
-# Part 3: Run the Node in the Background as a tmux Session
+# Optional 1: Run the Node in the Background as a Tmux Session
+
+**NOTE:** This is not needed, but it's a nice optional step to run a terminal remotely from the laptop etc such that when you close the top, the terminal session ssh connected to the node is still running, and can reconnect when you re-open the laptop.
 
 ***Recommend skipping Part 3 and move to Part 4 for most robust (and simpler) solution to keeping Ergo Node running in the background***
 
