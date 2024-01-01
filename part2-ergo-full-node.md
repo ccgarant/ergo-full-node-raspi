@@ -156,7 +156,7 @@ You'll need to make the following updates:
 - extraIndex ?: If true, will basically store extra blockchain data
 - Under scorex
   - publicUrl - update
-  - apiKeyHash - update (use http://128.253.41.49:9053/swagger#/utils/hashBlake2b to generate hash - don't worry, you can       change this at any time - click 'Try Out', then enter your made up API password in the Request Body within the " " then     click 'Execute' - your apiKeyHash is the 64 character hash in the parenthesis Response - include parenthesis in             ergo.config file)
+  - apiKeyHash - update per [Set API Key](/part2-ergo-full-node.md/#set-api-key)
   - declared address - update
   - nodeName - update
 
@@ -175,11 +175,23 @@ Note: Update the version in the command above. e.g
 java -jar -Xmx2g ergo-5.0.14.jar --mainnet -c ergo.conf
 ```
 
-### API Key
+### Set API Key
+There's two ways to do this. Use what you feel more comfortable with:
 
-http://headless.local:9053/panel
+#### Using the Swagger GUI
+So Swagger is a GUI to help you run commands from your full node. Before the node is up and running, use this site http://128.253.41.49:9053/swagger#/utils/hashBlake2b to generate hash. Note you can change this anytime.
 
-Update hello in the command below with a custom API password. Where instead of **hello** insert custom password!
+0. Click 'Try Out' top right. 
+1. Enter your made up API key password (like an email password you'll need to remember)
+    - Make sure to type the password in between the " "
+2. Click 'Execute' - 
+3. Copy your apiKeyHash, the 64 character hash in the parenthesis Response - copy and include quotes " " ergo.config file.
+
+![ergo-node-api-key-swagger](/images/set_api_hash_example.png)
+
+#### Using the terminal
+
+In terminal, copy the below command, but update `hello` in the command below with a custom API password. Where instead of **hello** insert custom password! Keep all the quotes and backslashes. Here's an example `"\"custom_password_example\""`.
 
 ```
 curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
@@ -187,6 +199,10 @@ curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" \
 -H "Content-Type: application/json" \
 -d "\"hello\""
 ```
+
+#### Type in your API Key Password
+
+Now in your node panel http://headless.local:9053/panel. click the top left "Set API Key" button and type in your password. If it matches the hash, it will work.
 
 Type in the password in the browser node panel under "API Key". It should work.
 
