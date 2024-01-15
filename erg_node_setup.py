@@ -20,31 +20,11 @@ def update_and_install_java():
     print("Installing Java...")
     run_command(install_java_command)
 
-# Increase SWAP size with elevated permissions
-def increase_swap_size():
-    swapoff_command = "sudo dphys-swapfile swapoff"
-    swapfile_config_path = "/etc/dphys-swapfile"
-    
-    # Use sudo to open and write to the file
-    with open(swapfile_config_path, 'r') as file:
-        swapfile_config = file.read()
-        swapfile_config = swapfile_config.replace("CONF_SWAPSIZE=100", "CONF_SWAPSIZE=4096")
-    
-    with open(swapfile_config_path, 'w') as file:
-        file.write(swapfile_config)
-    
-    swapon_command = "sudo dphys-swapfile setup && sudo dphys-swapfile swapon"
-    
-    print("Optimizing your raspberry pi...")
-    run_command(swapoff_command)
-    run_command(swapon_command)
-
-
 def set_api_key(password):
 
     # Use the JSON data in the curl request
-    api_key_command = 'curl -X POST "http://213.239.193.208:9053/utils/hash/blake2b" -H "accept: application/json" -H "Content-Type: application/json" -d "\\"{password}\\""'
-
+    api_key_command = f"curl -X POST 'http://213.239.193.208:9053/utils/hash/blake2b' -H 'accept: application/json' -H 'Content-Type: application/json' -d '\"{password}\"'"
+    
     stdout, stderr = run_command(api_key_command)
     
     if "400 Bad Request" in stderr:
@@ -139,58 +119,6 @@ scorex {{
     print("Initializing Node...")
     
     run_command("java -jar -Xmx2g ergo-5.0.18.jar --mainnet -c ergo.conf > /dev/null 2>&1 &")
-    
-    
-# Function to create and configure the systemd service for Ergo Node
-def create_ergo_node_service(node_path, version):
-
-    print("Setting up system services...")
-    full_path = f"{node_path}/ergo-node"
-    
-    service_file_contents = f"""
-[Unit]
-Description=Ergo Node Service
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=pi
-Type=simple
-WorkingDirectory={full_path}
-ExecStart=/usr/bin/java -jar -Xmx2g ergo-{version}.jar --mainnet -c ergo.conf
-KillSignal=SIGINT
-RestartKillSignal=SIGINT
-TimeoutStopSec=10
-LimitNOFILE=32768
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-"""
-
-    # Write the service file contents to /etc/systemd/system/ergo-node.service
-    service_file_path = "/etc/systemd/system/ergo-node.service"
-    with open(service_file_path, "w") as service_file:
-        service_file.write(service_file_contents)
-    
-    # Grant permissions to the service file
-    os.chdir("/etc/systemd/system")
-    grant_permissions_command = f"sudo chmod 644 ergo-node.service"
-    run_command(grant_permissions_command)
-    
-    # Update systemd
-    update_systemd_command = "sudo systemctl daemon-reload"
-    run_command(update_systemd_command)
-    
-    # Enable and start the Ergo Node service
-    enable_service_command = "sudo systemctl enable ergo-node.service"
-    run_command(enable_service_command)
-    
-    # Start the Ergo Node service
-    start_service_command = "sudo systemctl start ergo-node.service"
-    run_command(start_service_command)
-
 
 if __name__ == "__main__":
 
@@ -211,6 +139,6 @@ if __name__ == "__main__":
     setup_ergo_node(node_path, ergo_version)
     
     # Ask the user if they want to reboot
-    print("Ergo node setup complete. Run the system services script to automate node initialization.")
+    print("\n\nErgo node setup complete. Run the system services script to automate node initialization.")
     print("\n\n")
         
