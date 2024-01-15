@@ -148,6 +148,10 @@ def start_services(node_path):
 
 def alias_config(node_path):
 
+     # Path to the alias file within the specified node_path
+    full_path = f"{node_path}/ergo-node"
+    alias_file_path = os.path.join(full_path, "ergo_aliases.txt")
+
     # Alias definitions
     alias_file_contents = """
 alias ergo-status="systemctl status ergo-node"
@@ -156,13 +160,8 @@ alias ergo-stop="sudo systemctl stop ergo-node"
 alias ergo-restart="sudo systemctl restart ergo-node"
 alias ergo-logs="sudo journalctl --unit=ergo-node --output=cat -f"
 alias ergo-help="cat {}/ergo_aliases.txt"
-    """.format(node_path)  # Add the alias for ergo-help with the correct path
-
-    
-    # Path to the alias file within the specified node_path
-    full_path = f"{node_path}/ergo-node"
-    alias_file_path = os.path.join(full_path, "ergo_aliases.txt")
-    
+    """.format(full_path)  # Add the alias for ergo-help with the correct path
+  
     try:
         # Create the alias file at the specified path
         with open(alias_file_path, 'w') as alias_file:
