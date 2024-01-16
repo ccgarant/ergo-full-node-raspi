@@ -15,55 +15,58 @@ Time Allotment:
 2. Raspberry Pi 3b+ or 4 (tutorial is on a 3b+), [Pi Shop](https://www.raspberrypi.com/products/), [Recommend: Amazon Pi 4 ~$70](https://www.amazon.com/Raspberry-Model-2019-Quad-Bluetooth/dp/B07TC2BK1X/ref=sr_1_3?crid=3KZWTBP69R65N&keywords=raspberry%2Bpi&qid=1694884282&sprefix=raspberry%2Bpi%2Caps%2C138&sr=8-3&ufe=app_do%3Aamzn1.fos.18ed3cb5-28d5-4975-8bc7-93deae8f9840&th=1)
     - I would probably go with a Pi 4 and 4-to-8GB RAM. The 4s also seem like they are in stock, 3b+ have been sold out.
     - You might need a [1ft USB cord](https://www.amazon.com/s?k=ethernet+cord+1ft&i=computers&rh=n%3A172463%2Cp_n_feature_ten_browse-bin%3A23555330011&dc&ds=v1%3AIBQGTMGU7%2BnNpwAG01LyZDeAYOOPSm0prjnrjrhh%2ByM&crid=1Z6K45XA6F1R4&qid=1694885121&rnid=23555276011&sprefix=ethernet+cord+1f%2Ccomputers%2C124&ref=sr_nr_p_n_feature_ten_browse-bin_2) if the rpi is close to your router, recommend hard line connection, though wifi is okay too 
-4. External Solid State Drive (SSD) memory, [Recommend: Amazon SATA SSD 1Tb ~$80](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B078211KBB/ref=d_pd_sim_sccl_4_1/147-8461889-8258503?pd_rd_w=58YeQ&content-id=amzn1.sym.2351c4aa-bb60-45da-95b0-d52caf1c26f1&pf_rd_p=2351c4aa-bb60-45da-95b0-d52caf1c26f1&pf_rd_r=PJW12MM5M27HTY3TJ7VH&pd_rd_wg=FyYif&pd_rd_r=46296c39-6582-4147-9883-869c83e46687&pd_rd_i=B078211KBB&th=1)
+4. *External Solid State Drive (SSD) memory, [Recommend: Amazon SATA SSD 1Tb ~$80](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B078211KBB/ref=d_pd_sim_sccl_4_1/147-8461889-8258503?pd_rd_w=58YeQ&content-id=amzn1.sym.2351c4aa-bb60-45da-95b0-d52caf1c26f1&pf_rd_p=2351c4aa-bb60-45da-95b0-d52caf1c26f1&pf_rd_r=PJW12MM5M27HTY3TJ7VH&pd_rd_wg=FyYif&pd_rd_r=46296c39-6582-4147-9883-869c83e46687&pd_rd_i=B078211KBB&th=1) *If you go with the SSD option you do NOT need the micro SD.
 5. SSD Case & Cord, [Recommend: Amazon ORICO 2.5'' External Hard Drive Enclosure ~$7](https://www.amazon.com/ORICO-External-Enclosure-Support-Tool-Free/dp/B01LY97QE8/ref=d_pd_sim_sccl_4_26/147-8461889-8258503?pd_rd_w=v30UK&content-id=amzn1.sym.2351c4aa-bb60-45da-95b0-d52caf1c26f1&pf_rd_p=2351c4aa-bb60-45da-95b0-d52caf1c26f1&pf_rd_r=CR5YJYDZ5K5ZMD98S98P&pd_rd_wg=t811H&pd_rd_r=b3838bb0-cdd9-45fa-81ff-c03d3fbba4cb&pd_rd_i=B01LY97QE8&th=1)
 6. Raspberry Pi Power Cord, [Pi 4 Shop recommended ~$8](https://www.raspberrypi.com/products/type-c-power-supply/)
     - Be careful! The Pi 3b+ has a different power cord than the Pi 4! The Pi 4 requires more power.
     - However, the Pi 4 power has a USB-C that can be used on the 3b+, I use it and works fine.
 7. Raspberry Pi Case, [Recommend Amazon Flirc metal case](https://www.amazon.com/Flirc-Raspberry-Case-Gen2-Model/dp/B07349HT26/ref=sr_1_15?crid=355HS8YRL4UE8&keywords=raspberry%2Bpi%2Bcase%2Bmetal&qid=1694885842&s=pc&sprefix=raspberry%2Bpi%2Bcase%2Bmetal%2Ccomputers%2C124&sr=1-15&th=1)
     - Just make sure the case is a good heat sink, has a fan, or airflow.
+8. You will be using ssh on your personal computer to get into your "headless" Raspberry Pi - because of this you need to make sure that you have access to bash shell on your personal computer (i.e. you can install an Ubuntu distro on Windows 10/11 - https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-11-with-gui-support#1-overview) so that you can get into your headless pi as soon as you complete the next step.
 
 
 # Setup & Configuration
 
+## Operating System (OS) Flashing Setup
 
-## SD Card Flashing Setup
-This part covers "flashing" (writing) the SD Card with the Operating System (OS) into firmware memory.
+This part covers "flashing" (writing) the raspberry pi Operating System (OS) into firmware memory.
 
-Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (I used macbook pro which has an SD Flash drive).
+*💡 HEADS-UP: The first tutorial trials flashed the OS right to the SD Card. It quickly became apparent the RAM & Log storage filled up the SD Card memory (30MB). In fact, you can actually flash and boot up right into the external USB storage drive, no mounting required either!*
 
-You could follow the [Raspberry Pi Documentation: Installing the Operating System](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system), however I found watching the following youtube video much more helpful and easier:
+Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
 
-[Youtube: Headless Raspberry Pi Zero Setup](https://youtu.be/wQJqwGVNHTM?si=GzJZh4_am2cLS1gL)
+You could follow the [Raspberry Pi Documentation: Installing the Operating System](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system), however I found watching the following youtube video much more helpful and easier to get an idea of what we're doing: [Youtube: Headless Raspberry Pi Zero Setup](https://youtu.be/wQJqwGVNHTM?si=GzJZh4_am2cLS1gL).
 
-- Choose Raspberry Pi OS **Lite** 32bit under "Raspberry Pi OS (other)"
-    - 64-bit is faster and is also a good option. Just not tested.
+- Open the Raspberry Pi Imager GUI
+- Choose Raspberry Pi OS **Lite** 64bit under "Raspberry Pi OS (other)"
+    - 32-bit is the safe option. Seems 64bit OS is compatible and tested with the 3b+
     - Lite for headless (no Desktop GUIs)
-- Choose SD Card to write to
+- Plug in the external USB storage drive
+- Choose the external memory to write to in the rpi GUI
 - Bottom right click gear for advanced settings options
 - Set hostname, rename raspberrypi to **"headless"**
     - you can use your own username but the headless is used in this tutorial
 - Yes Enable SSH
 - Yes "Use password authentication"
 - Fill in username and password to login to the rpi.
-- Update username to **"pi"**
+- Update username to **"pi"** (or whatever name you want but pi is used here)
 - Yes Enable it to connec to the wifi
-    - Note SSID is "wifi name"
+    - Note SSID is home "wifi name"
     - Type in the password
 - Save
 - Write
 
-The first time takes a few minutes
+The first time takes a few minutes, grab a coffee ☕
 
-### Hardware Assembly & Checking Pi IP Address
-Assembly the rpi and connect it to your router. Trust me this saves time because you'll check your router for headless.local IP address.
+### Hardware Assembly & Checking Pi IP Address (optional - ssh should work fine without checking ip)
+Assembly the rpi and connect it to your router. Trust me this saves time because you'll check your router for headless.local IP address. 
 
-**⚠️ WARNING: For external SSD USB storage, do not plug it in yet, it freezes your pi on power up. Setup for this is later.**
+However, upon boot up it should connect on your wifi, and from your router page, you should be able to find it connected. (Type in your router 192.168.XXX.YYY into your browser).
+
 - Put the pi in the case
-- Put the micro SD card in in rpi
-- Connect it to power
+- Connect the flashed memory into in rpi
+- Connect the rpi to power
 - Connect it to your Internet Router hardlined via ethernet connection (easier to troubleshoot, can do wifi later)
-- Put the SSD Drive into the case, but do not connect it to the rpi yet!
 - Pi takes about 5 minutes to boot up. Wait 5 minutes before trying to ssh in.
 
 ### Getting into your rpi
@@ -77,6 +80,7 @@ ssh pi@headless.local
 ```
 Recall `pi` is the username and `headless.local` is the IP address.
 
+<<<<<<< HEAD
 > ⚠️ If you get this warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" Odds are you already have known_hosts ssh keys into the pi. You'll need to delete them and basically start fresh.
 >
 >cd to home, then cd into the hidden `.ssh` folder
@@ -95,6 +99,26 @@ Recall `pi` is the username and `headless.local` is the IP address.
 >`Ctrl+k` on the lines with headless to wipe them out (nice little trick).
 >
 >If there are still ssh failed attempts, in terminal:
+=======
+If you get this warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" Odds are you already have known ssh keys into the pi. You'll need to delete them and basically start fresh.
+
+cd to home (this is on your personal computer, not the headless pi), then cd into the hidden `.ssh` folder
+
+```bash
+cd
+cd .ssh
+```
+
+Next you'll open the known_hosts folder which keeps the username public keys. You'll then delete all the former pi@headless.local logins
+
+```bash
+sudo nano known_hosts
+```
+
+`Ctrl+k` on the lines with headless to wipe them out (nice little trick).
+
+If there are still ssh failed attempts, in terminal:
+>>>>>>> 90a50931acc6991e9ca41e73332d7aa4254ee925
     - cd //to home folder (directory)
     - cd .ssh //directories with a dot in front are hidden
     - nano known_hosts //to check ssh connections
@@ -115,9 +139,20 @@ This is where most of the configuration is done for the rpi. Feel free to explor
 ```bash
 sudo raspi-config
 ```
+Congrats! That's it (much easier to boot right from the external memory, already mounted and partitioned).
 
-## External Hardware Mounting
+---------------------
+
+
+## External Hardware Mounting if booting from the SD Card
+
+***IF*** you chose the hard route, flashing and booting from the SD Card and using a separate external USB memory storage, you'll have to perform these steps.
+
 This is to allow the external SSD drive memory to be attached and not freeze the rpi. This does not come default in Lite.
+
+You'll probably notice your rpi did not boot up if you booted from the SD Card and have the external memory already connected.
+
+You'll need to reboot (remove power) and disconnect the USB memory. Then start up.
 
 This is a little involved so prepare yourself for battle!
 
@@ -125,9 +160,7 @@ This is a little involved so prepare yourself for battle!
 
 #### Find the external drive device name
 
-**Plug in the SSD External Hard Drive!**
-
-lists all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
+Lists all memory disks and partitions. More on [fdisk](https://wiki.archlinux.org/title/Fdisk).
 
 ```bash
 sudo fdisk -l
@@ -138,10 +171,9 @@ The SATA SSD external memory here is `Disk /dev/sda: 931.51 GiB`. It is identifi
 It is by default listed with two partitions:
 
     Device      Start        End    Sectors   Size Type
-    /dev/sda1      40     409639     409600   200M EFI System
-    /dev/sda2  409640 1953525127 1953115488 931.3G Apple APFS
+    /dev/sda   409640 1953525127 1953115488 931.3G ext4
 
-Now we need to delete the partitions and create a new one with a desirable file storage type ext4
+Now we need to delete the partitions and create a new one with a desirable file storage type ext4 just in case it's not already ext4.
 
 #### delete the default partitions
 

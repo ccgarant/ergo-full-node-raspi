@@ -1,9 +1,7 @@
-# Part 4: Robust Run Node in Pi Background Systemd (in-work)
+# Part 3: Robust Run Node in Pi Background Systemd (in-work)
 
 ## Run on Reboot & in the Background
-With Tmux you still have some manual set and stop work to do.
-
-Tmux is really a temporary solution. The robust and reliable way would be to run the node upon pi startup, reboot, and automatically run as a systemd service in the background. Set and forget. 
+The robust and reliable way to run the node upon pi startup, reboot, and automatically run is as a systemd service in the background. Set and forget. 
 
 Follow these readme setps once again from [Chris (Eeysirhc)](https://github.com/Eeysirhc)
 
@@ -43,7 +41,7 @@ User                =pi
 Type                =simple
 
 #note path/to/ergo-node in this tutorial is /mnt/hd1/ergo-node but in general =/path/to/ergo-node
-WorkingDirectory    =/mnt/hd1/ergo-node
+WorkingDirectory    =/ergo-node
 
                     #update the version!!!
 ExecStart           =/usr/bin/java -jar -Xmx2g ergo-<VERSION>.jar --mainnet -c ergo.conf

@@ -1,5 +1,5 @@
-# Part 5: Satergo Full Node Wallet Setup
-This tutorial steps thru setting up your rpi full node as a "remote node for the awesome open source full node wallet Satergo. Also, steps to get your node reflected in ergonodes.net.
+# Part 4: Satergo Full Node Wallet Setup
+This tutorial steps thru setting up your rpi full node as a "remote node" for the awesome open source full node wallet Satergo. Also, steps to get your node reflected in ergonodes.net.
 
 Time allocation: 15-30min
 

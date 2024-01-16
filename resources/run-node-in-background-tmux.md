@@ -1,4 +1,8 @@
-# Part 3: Run the Node in the Background as a tmux Session
+# Optional 1: Run the Node in the Background as a Tmux Session
+
+**NOTE:** This is not needed, but it's a nice optional step to run a terminal remotely from the laptop etc such that when you close the top, the terminal session ssh connected to the node is still running, and can reconnect when you re-open the laptop.
+
+***Recommend skipping Part 3 and move to Part 4 for most robust (and simpler) solution to keeping Ergo Node running in the background***
 
 I eventually encountered the problem everytime my computer went to sleep, say on the macbook laptop, the terminal ssh session would break and the node would not run and sync in the background.
 
@@ -121,12 +125,7 @@ ssh pi@headless.local
 
 Type in the password
 
-```bash
-cd /mnt/hd1
-```
-
 To where we are storing the node mounted on the external SSD drive.
-
 
 Now, here's a handy cheatsheet for working with tmux. Open it up.
 

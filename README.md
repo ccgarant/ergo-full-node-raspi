@@ -25,22 +25,28 @@ The tutorial includes:
     - goal is for nipopow bootstrap setup
 - Run the node in the background thru a tmux session
 
-## [Part 3: Run the Node in the Background as a tmux Session](/part3-run-node-in-background-tmux.md)
-- Why is this needed (ssh connection breaks when computer sleeps)
-- What is a tmux session?
-- Run the node syncing in the background as a tmux session
-
-## [Part 4: Robustly run the node in the background as a systemd](/part4-robust-run-node-in-background-systemd.md)
+## [Part 3: Robustly run the node in the background as a systemd](/part3-robust-run-node-in-background-systemd.md)
 - Robustly configure the rpi to run the node upon startup, restart, and in the background
 - Port forwarding to get incoming peer connections (not just outgoing)
 
-## [Part 5: Satergo Wallet Full Node Wallet Setup](/part5-setup-satergo-full-node-wallet.md)
+## [Part 4: Satergo Wallet Full Node Wallet Setup](/part4-setup-satergo-full-node-wallet.md)
 - Setup wallet in the Ergo Node Explorer
 - Setup wallet in Satergo w/ remote node into the rpi
 - Enjoy the beautiful Satergo wallet gui on your local machine
 
-## [Ergo Full Node Resources](/resources.md)
-A cheatsheet and comprehensive list of references.
+## Ergo Full Node Resources
+A comprehensive list of resources, references, and cheatsheets in the /resources folder.
+- [Ergo Full Node Resource List](/resources/resources.md) - A comprehensive list of Ergo resources for everything you might need.
+- [Run the Node in the Background as a Tmux Session](/resources//run-node-in-background-tmux.md)
+    - Not needed, but helpful too to run terminal from laptop and not break ssh connection
+    - Why is this needed (ssh connection breaks when computer sleeps)
+    - What is a tmux session?
+    - Run the node syncing in the background as a tmux session
+- [Command Cheatsheet](/resources/command_cheatsheet.md) - A list of copy paste ready daily commands
+- [Example Ergo Config File Light](/resources/example_ergo_config_file_light.txt) - A lightweight ergo.conf example file
+- [Example Ergo Config File](/resources/example_ergo_config_file.txt) - A comprehensive (heavy) ergo.conf example file
+- [Example Ergo Node Service File](/resources/example-ergo-node-service-file.txt) - For systemctl running in the background copy paste ready.
+
 
 ------------------------------------
 ## Issues, Improvements, Help
@@ -78,8 +84,17 @@ Appreciate the help from the following folks and resources!
 
 -------------
 
+## Donations or Staking
+
 If you find this tutorial helpful, here's my donation tip jar! #Ergo2Top10
 
 ![donations-qr-code](/images/wallet-qr-code.jpeg)
 
+```bash
+9htXsxhTNpt8LaSdLF5PDqNe99RaXmMRTAJu3iTB57ivxx3UNFa
+```
+
 Or better yet, if an $ADA hodler too, Stake to [BALNC Pool](https://pool.pm/a43ceac028a673e9f8611de0f683c70fdcadde560f28c2fb8cfabc81)! We provide high quality on-chain analysis and data visualization using Svelte: https://www.balanceanalytics.io/. Cheers!
+
+## Questions?
+Feel free to jump into our [Ergo - BALANCE](https://matrix.to/#/#ergo:forum.balanceanalytics.io) room to chat and ask questions. This chat is in the Matrix.org open source commmunication protocol, we recommend using the Element Client.

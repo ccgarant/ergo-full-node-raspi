@@ -36,6 +36,8 @@ This is a cheat sheet list of references.
 - [Ergo Platform Matrix.org Space](https://matrix.to/#/#ergo-platform:matrix.org)
     - [Matrix.org](www.matrix.org) is a decentralized communication protocol that I highly recommend using. Element App is the best, but there are a ton of other client options. From the Space all the chat rooms are bridged and can join.
 
+- [Ergo - BALANCE](https://matrix.to/#/#ergo:forum.balanceanalytics.io) BALANCE Stake Pool Matrix chat room for Ergo focused topics.
+
 
 ## Explorers
 
