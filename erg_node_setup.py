@@ -49,7 +49,7 @@ def update_and_install_java():
 def set_api_key(password):
 
     # Use the JSON data in the curl request
-    api_key_command = f"curl -X POST 'http://213.239.193.208:9053/utils/hash/blake2b' -H 'accept: application/json' -H 'Content-Type: application/json' -d '\"{password}\"'"
+    api_key_command = f"curl -X POST 'http://128.253.41.49:9053/utils/hash/blake2b' -H 'accept: application/json' -H 'Content-Type: application/json' -d '\"{password}\"'"
     
     stdout, stderr = run_command(api_key_command)
     
