@@ -10,34 +10,23 @@ This is geared toward beginners who want to learn and hopefully get more Ergo no
 
 Don't worry, it's not that hard, and you will feel super cool afterwards.
 
-The tutorial includes:
+The tutorial includes 3 Tutorial Levels:
 
-## [Part 1: Headless Raspi Setup & Login](/part1-raspi-setup.md)
-- Hardware Shopping List
-- Brief Intro to Headless Command Line Interface (CLI)
-- Flash Setup & Configuration of the Pi
-- Secure Shelling into the Pi
-- Setup External Storage USB
+## [Beginner](/beginner/node-beginner-tutorial.md)
+Recommended for just getting started, step-by-step guide with heavy hand holding.
 
-## [Part 2: Ergo Full Node Configure & Run](/part2-ergo-full-node.md) 
-- Setup & Configure the Pi for Ergo Node
-- Headless Ergo Node setup
-    - goal is for nipopow bootstrap setup
-- Run the node in the background thru a tmux session
+## [Proficient](/proficient/node-proficient-tutorial.md)
+Recommended after you've setup a node a few times, automated script for setup. Quick start.
 
-## [Part 3: Robustly run the node in the background as a systemd](/part3-robust-run-node-in-background-systemd.md)
-- Robustly configure the rpi to run the node upon startup, restart, and in the background
-- Port forwarding to get incoming peer connections (not just outgoing)
+## [Specialist](/specialist/node-specialist-tutorial.md)
+(COMING SOON) Recommended docker ergo node for the super savvy. This will allow bootstrap from genesis or start from a snapshot for a quick sync.
 
-## [Part 4: Satergo Wallet Full Node Wallet Setup](/part4-setup-satergo-full-node-wallet.md)
-- Setup wallet in the Ergo Node Explorer
-- Setup wallet in Satergo w/ remote node into the rpi
-- Enjoy the beautiful Satergo wallet gui on your local machine
+--------------------------------------
 
 ## Ergo Full Node Resources
 A comprehensive list of resources, references, and cheatsheets in the /resources folder.
 - [Ergo Full Node Resource List](/resources/resources.md) - A comprehensive list of Ergo resources for everything you might need.
-- [Run the Node in the Background as a Tmux Session](/resources//run-node-in-background-tmux.md)
+- [Run the Node in the Background as a Tmux Session](/resources/run-node-in-background-tmux.md)
     - Not needed, but helpful too to run terminal from laptop and not break ssh connection
     - Why is this needed (ssh connection breaks when computer sleeps)
     - What is a tmux session?
@@ -75,6 +64,7 @@ Appreciate the help from the following folks and resources!
 - [Eeysirhc](https://twitter.com/Eeysirhc) for an awesome [ergo-rpi tutorial](https://github.com/Eeysirhc/ergo-rpi) that was easy to follow and really helped
 - [Wael](https://twitter.com/Piada_stakePool) Teaching me to tmux
 - [WCat of Star Forge Stake Pool ](https://twitter.com/Star_Forge_Pool) for continuous education in all things sysadmin & prepping :) 
+- [jkrek17](https://twitter.com/jkrek17) for the proficient python script node setup automation.
 - [Reqlez ($psiloblox)](https://twitter.com/PSILOBLOX) for ergo.conf configuration file help & the Rosen Bridge early adopters invitation
 - [ErgOne](https://twitter.com/Erg0ne) & [koukarin4](https://twitter.com/koukarin4) for the encouragement of a helpful tutorial
 - [Armada Alliance](https://twitter.com/alliance_armada) for the community of ARM builders continusouly educating and amazing [documentation resources](https://armada-alliance.com/docs/)
