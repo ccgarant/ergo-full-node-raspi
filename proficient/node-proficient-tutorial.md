@@ -1,4 +1,6 @@
-# Raspberry Pi Ergo Node Setup
+# Ergo Node Proficient Tutorial
+
+This assumes that you have basic knowledge of Raspberry Pi and Linux system administration.
 
 This Python program helps you set up a headless Raspberry Pi Ergo node. It automates the process of updating the Linux system, installing Java, downloading and configuring the Ergo node software, creating system services for automatic node initialization, configuring user aliases for node commands, and optionally rebooting the system.
 
@@ -78,6 +80,4 @@ This Python program automates the following tasks for setting up an Ergo node on
 8. Optionally, reboot the Raspberry Pi to apply configuration changes.
 
 ---
-
-**Note:** This program was created to simplify the setup process for an Ergo node on a Raspberry Pi and assumes that you have basic knowledge of Raspberry Pi and Linux system administration.
 

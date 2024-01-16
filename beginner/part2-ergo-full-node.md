@@ -38,34 +38,6 @@ To check java installed properly check the version
 java -version
 ```
 
-### Increase SWAP size
-
-The steps below optimizes your Pi's hardware and extends its operational capabilities for this specific purpose.
-
-```bash
-sudo dphys-swapfile swapoff
-sudo nano /etc/dphys-swapfile
-```
-
-Edit the CONF_SWAPSIZE default value of 100 to 4096 mega bytes
-
-> CONF_SWAPSIZE=4096
-
-Save file with "CTRL + X" then hit "Y" for Yes to save, and "ENTER" to confirm.
-
-Turn swapfile on
-
-```bash
-sudo dphys-swapfile setup
-sudo dphys-swapfile swapon
-```
-
-Reboot to start fresh
-
-```bash
-sudo reboot
-```
-
 ## Ergo Node Steps
 The following steps will setup the ergo node's configuration, download the node software ".jar" file, setup and run the node.
 
@@ -104,7 +76,7 @@ Note: GNU Wget is a free utility for non-interactive download of files from the 
 Next, setup the ergo node configuration file
 
 ```bash
-sudo nano ergo.conf
+nano ergo.conf
 ```
 Note: sudo is super user do (admin privileges). Nano is command line to touch and edit the ergo.conf file. You will now be inside the ergo.conf file. If the file didn't exist, it was just now created.
 

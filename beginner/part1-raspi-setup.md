@@ -80,6 +80,26 @@ ssh pi@headless.local
 ```
 Recall `pi` is the username and `headless.local` is the IP address.
 
+<<<<<<< HEAD
+> ⚠️ If you get this warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" Odds are you already have known_hosts ssh keys into the pi. You'll need to delete them and basically start fresh.
+>
+>cd to home, then cd into the hidden `.ssh` folder
+>
+>```bash
+>cd
+>cd .ssh
+>```
+>
+>Next you'll open the known_hosts folder which keeps the username public keys. You'll then delete all the former pi@headless.local logins
+>
+>```bash
+>nano known_hosts
+>```
+>
+>`Ctrl+k` on the lines with headless to wipe them out (nice little trick).
+>
+>If there are still ssh failed attempts, in terminal:
+=======
 If you get this warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!" Odds are you already have known ssh keys into the pi. You'll need to delete them and basically start fresh.
 
 cd to home (this is on your personal computer, not the headless pi), then cd into the hidden `.ssh` folder
@@ -98,6 +118,7 @@ sudo nano known_hosts
 `Ctrl+k` on the lines with headless to wipe them out (nice little trick).
 
 If there are still ssh failed attempts, in terminal:
+>>>>>>> 90a50931acc6991e9ca41e73332d7aa4254ee925
     - cd //to home folder (directory)
     - cd .ssh //directories with a dot in front are hidden
     - nano known_hosts //to check ssh connections
@@ -316,7 +337,7 @@ so `cd` up a level and change mode on the directory
 
 ```bash
 cd ..
-sudo chmod -R 777 hd1 
+chmod -R 760 hd1 
 ```
 
 changes permissions in directory hd1 to read write 
