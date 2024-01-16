@@ -79,5 +79,16 @@ This Python program automates the following tasks for setting up an Ergo node on
 7. Configure user aliases for Ergo node commands.
 8. Optionally, reboot the Raspberry Pi to apply configuration changes.
 
+## Ergo Node Commands
+
+Aliases were configured for your node to make node interaction easier:
+
+ergo-status     shows the status of the node
+ergo-start      will start the node service
+ergo-stop       will end the node service
+ergo-restart    will restart the node
+ergo-help       will show all node commands
+ergo-logs       shows the log file of the node
+
 ---
 
