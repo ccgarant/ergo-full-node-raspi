@@ -12,13 +12,13 @@ Don't worry, it's not that hard, and you will feel super cool afterwards.
 
 The tutorial includes 3 Tutorial Levels:
 
-## [Beginner](/beginner/node-beginner-tutorial.md)
+## [Beginner](/01-beginner/node-beginner-tutorial.md)
 Recommended for just getting started, step-by-step guide with heavy hand holding.
 
-## [Proficient](/proficient/node-proficient-tutorial.md)
+## [Proficient](/02-proficient/node-proficient-tutorial.md)
 Recommended after you've setup a node a few times, automated script for setup. Quick start.
 
-## [Specialist](/specialist/node-specialist-tutorial.md)
+## [Specialist](/03-specialist/node-specialist-tutorial.md)
 (COMING SOON) Recommended docker ergo node for the super savvy. This will allow bootstrap from genesis or start from a snapshot for a quick sync.
 
 --------------------------------------
