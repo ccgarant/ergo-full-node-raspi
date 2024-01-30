@@ -37,7 +37,7 @@ git clone 'https://github.com/ccgarant/ergo-full-node-raspi.git'
 Use the `cd` command to enter the program directory:
 
 ```bash
-cd proficient
+cd 02-proficient
 ```
 
 4. **Make the Program Executable:**
@@ -50,11 +50,18 @@ chmod +x ergo_node_setup.py
 
 5. **Run the Program:**
 
-Execute the program with the following command:
+Execute the program with the following command for a full node from scratch (no bootstrapping):
 
 ```bash
 sudo python ergo_node_setup.py
 ```
+
+Or for a super light weight node using bootstrapping and nipopow use this:
+
+```bash
+sudo python ergo_node_setup_lite.py
+```
+
 
 The program will start and guide you through the Ergo Node setup process. Follow the prompts, and leave the prompt blank to use default settings when applicable.
 
