@@ -266,7 +266,7 @@ scorex {{
     
     print("\nInitializing Node...")
     
-    run_command("java -jar -Xmx2g ergo-5.0.18.jar --mainnet -c ergo.conf > /dev/null 2>&1 &")
+    run_command("java -jar -Xmx2g ergo-5.0.20.jar --mainnet -c ergo.conf > /dev/null 2>&1 &")
 
 if __name__ == "__main__":
 
@@ -278,8 +278,8 @@ if __name__ == "__main__":
     node_path = input("Enter the path where you want to install the Ergo node (default /home/pi): ") or "/home/pi"
     print("\n\n")
     
-    # Ask the user to input the Ergo version with a default of "5.0.18"
-    ergo_version = input("Enter the Ergo version (default is 5.0.18): ") or "5.0.18"
+    # Ask the user to input the Ergo version with a default of "5.0.20"
+    ergo_version = input("Enter the Ergo version (default is 5.0.20): ") or "5.0.20"
     print("\n\n")
     
     # Run the setup steps

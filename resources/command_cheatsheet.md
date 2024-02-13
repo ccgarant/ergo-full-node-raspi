@@ -82,16 +82,16 @@ mount -o remount, rw /
 
 ## Ergo Node Maintenance
 
-Upgrade the node, here shown for version 5.0.14. Update the version!
+Upgrade the node, here shown for version 5.0.20. Update the version!
 
 Copy and paste this into a text file, edit the version, then c & p into terminal
 ```bash
-wget https://github.com/ergoplatform/ergo/releases/download/v5.0.14/ergo-5.0.14.jar
+wget https://github.com/ergoplatform/ergo/releases/download/v5.0.20/ergo-5.0.20.jar
 ```
 
 Run the node not as a systemd
 ```bash
-java -jar -Xmx2g ergo-5.0.14.jar --mainnet -c ergo.conf
+java -jar -Xmx2g ergo-5.0.20.jar --mainnet -c ergo.conf
 ```
 
 Update the rpi for whatever reason

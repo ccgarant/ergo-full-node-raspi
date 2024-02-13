@@ -161,7 +161,7 @@ Make sure both tabs are in the `/mnt/hd1` directory.
 Let's restart the node sync'ing in this tmux ergo-node session to see it live.
 
 ```bash
-java -jar -Xmx2g ergo-5.0.14.jar --mainnet -c ergo.conf
+java -jar -Xmx2g ergo-5.0.20.jar --mainnet -c ergo.conf
 ```
 
 You should see the node sync'ing in each terminal tab.

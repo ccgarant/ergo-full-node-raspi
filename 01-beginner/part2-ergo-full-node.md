@@ -66,7 +66,7 @@ wget https://github.com/ergoplatform/ergo/releases/download/v<VERSION>/ergo-<VER
 Note: Update the version in the above file. For copy and paste ease:
 
 ```bash
-wget https://github.com/ergoplatform/ergo/releases/download/v5.0.18/ergo-5.0.18.jar
+wget https://github.com/ergoplatform/ergo/releases/download/v5.0.20/ergo-5.0.20.jar
 ```
 
 This will take a few minutes.
@@ -144,7 +144,7 @@ java -jar -Xmx2g ergo-<NODE>.jar --mainnet -c ergo.conf
 Note: Update the version in the command above. e.g 
 
 ```bash
-java -jar -Xmx2g ergo-5.0.14.jar --mainnet -c ergo.conf
+java -jar -Xmx2g ergo-5.0.20.jar --mainnet -c ergo.conf
 ```
 
 ### Set API Key
