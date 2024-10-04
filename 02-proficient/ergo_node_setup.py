@@ -15,6 +15,7 @@
 #
 #######################################################################
 
+
 import os
 import subprocess
 import sys
@@ -59,15 +60,13 @@ def run_sudo_command(command):
 
 # Update the system and install Java
 def update_and_install_java():
-    update_command = "apt -q update && apt -q upgrade -y"
-    install_java_command = "apt -q install default-jdk -y"
-
     print("\n[Step 1] Updating the system...")
-    run_sudo_command(update_command)
+    run_sudo_command("apt-get update -q")
+    run_sudo_command("apt-get upgrade -y -q")
     print("[Step 1] System update and upgrade completed.\n")
 
     print("[Step 2] Installing Java...")
-    run_sudo_command(install_java_command)
+    run_sudo_command("apt-get install default-jdk -y -q")
     print("[Step 2] Java installation completed.\n")
 
 # Function to securely get API Key hash
