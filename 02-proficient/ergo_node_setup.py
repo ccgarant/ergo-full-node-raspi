@@ -232,7 +232,7 @@ alias ergo-help="cat {alias_file_path}"
         sys.exit(1)
 
 # Function to create Ergo node directories and configuration
-def setup_ergo_node(node_path, version, data_dir, username):
+def setup_ergo_node(node_path, version, data_dir, username, lite_node, extra_index):
     print("[Step 4] Setting up the Ergo node...")
 
     ergo_node_path = os.path.join(node_path, "ergo-node")
@@ -250,14 +250,24 @@ def setup_ergo_node(node_path, version, data_dir, username):
     run_command(download_ergo_jar)
     print("[Success] Ergo JAR downloaded successfully.\n")
 
-    # Get the public IPv6 address
-    print("[Info] Fetching public IPv6 address...")
-    public_ip_command = "curl -6 -s ifconfig.co"  # Using -6 to ensure IPv6
-    public_ip = run_command(public_ip_command)
+    # Attempt to get public IPv6 address first
+    print("[Info] Attempting to fetch public IPv6 address...")
+    public_ip_command_ipv6 = "curl -6 -s ifconfig.co"
+    public_ip = run_command(public_ip_command_ipv6)
+
+    # If IPv6 address is not found, fall back to IPv4
     if not public_ip:
-        print("\n[Error] Failed to retrieve public IPv6 address.")
-        sys.exit(1)
-    print(f"[Success] Public IPv6 Address: {public_ip}\n")
+        print("[Info] IPv6 address not found. Attempting to fetch public IPv4 address...")
+        public_ip_command_ipv4 = "curl -4 -s ifconfig.co"
+        public_ip = run_command(public_ip_command_ipv4)
+        if not public_ip:
+            print("\n[Error] Failed to retrieve public IP address.")
+            sys.exit(1)
+        ip_version = "ipv4"
+        print(f"[Success] Public IPv4 Address: {public_ip}\n")
+    else:
+        ip_version = "ipv6"
+        print(f"[Success] Public IPv6 Address: {public_ip}\n")
 
     # Ask the user to set the node name
     node_name = input("Enter the node name: ").strip()
@@ -278,31 +288,53 @@ def setup_ergo_node(node_path, version, data_dir, username):
         sys.exit(1)
     print(f"[Success] API Key Hash: {api_key_hash}\n")
 
+    # Configure node settings based on user choices
+    mining = "false"  # Default to non-mining node
+    extra_index_setting = "false"
+    utxo_bootstrap = "false"
+    nipopow_bootstrap = "false"
+
+    if lite_node:
+        # Lite node settings
+        utxo_bootstrap = "true"
+        nipopow_bootstrap = "true"
+
+    if extra_index:
+        extra_index_setting = "true"
+
+    # Format the IP address correctly in the configuration
+    if ip_version == "ipv6":
+        # Enclose IPv6 addresses in square brackets
+        formatted_ip = f"[{public_ip}]"
+    else:
+        formatted_ip = public_ip  # IPv4 addresses do not need brackets
+
     # Contents of ergo.conf file with API Key hash and node name
+    # Updated to reflect user choices and IP address formatting
     ergo_conf_contents = f"""
 ergo {{
     node {{
-        mining = false
-        extraIndex = false
+        mining = {mining}
+        extraIndex = {extra_index_setting}
 
         utxo {{
-            utxoBootstrap = false
+            utxoBootstrap = {utxo_bootstrap}
             storingUtxoSnapshots = 2
             p2pUtxoSnapshots = 2
         }}
         nipopow {{
-            nipopowBootstrap = false
+            nipopowBootstrap = {nipopow_bootstrap}
             p2pNipopows = 2
         }}
     }}
 }}
 scorex {{
     restApi {{
-        publicUrl = "http://[{public_ip}]:9053"
+        publicUrl = "http://{formatted_ip}:9053"
         apiKeyHash = "{api_key_hash}"
     }}
     network {{
-        declaredAddress = "[{public_ip}]:9030"
+        declaredAddress = "{formatted_ip}:9030"
         nodeName = "{node_name}"
     }}
 }}
@@ -333,7 +365,7 @@ dataDir = "{data_dir}"
 def main():
     print("\n\n")
     print("#############################################")
-    print("#      Ergo Node Setup Script v2.2          #")
+    print("#      Ergo Node Setup Script v2.6          #")
     print("#############################################\n")
 
     # Prompt user for installation directory
@@ -377,9 +409,23 @@ def main():
     data_dir = data_dir_input if data_dir_input else default_data_dir
     print(f"[Input] Using data directory: {data_dir}\n")
 
+    # Ask the user if they want to set up a lite node
+    print("Do you want to set up a Lite node? (yes/no)")
+    print("Running a lite NiPoPoW node in Ergo means operating a node that utilizes Non-Interactive Proofs of Proof-of-Work (NiPoPoWs) to verify transactions without needing to download the entire blockchain. This significantly reduces storage and bandwidth requirements, making it ideal for devices with limited resources.")
+    lite_node_input = input("Enter your choice (default is no): ").strip().lower()
+    lite_node = lite_node_input in ['yes', 'y']
+    print(f"[Input] Lite node setup: {'Enabled' if lite_node else 'Disabled'}\n")
+
+    # Ask the user if they want to enable extraIndex
+    print("Do you want to enable extraIndex? (yes/no)")
+    print("The extraIndex refers to an additional index used to store and retrieve extra data associated with transactions or blocks. Enabling this feature enhances the node's ability to handle complex data structures and queries efficiently, which is useful for applications requiring more than basic transaction data.")
+    extra_index_input = input("Enter your choice (default is no): ").strip().lower()
+    extra_index = extra_index_input in ['yes', 'y']
+    print(f"[Input] extraIndex: {'Enabled' if extra_index else 'Disabled'}\n")
+
     # Run the setup steps
     update_and_install_java()
-    setup_ergo_node(node_path, ergo_version, data_dir, username)
+    setup_ergo_node(node_path, ergo_version, data_dir, username, lite_node, extra_index)
     increase_swap_size()
     create_ergo_node_service(node_path, ergo_version, data_dir, username)
     start_services()
