@@ -19,6 +19,8 @@ import os
 import subprocess
 import sys
 import getpass
+import hashlib
+import pwd
 
 # Function to execute shell commands and handle errors
 def run_command(command, capture_output=True):
@@ -70,9 +72,6 @@ def update_and_install_java():
 
 # Function to securely get API Key hash
 def set_api_key(password):
-    # Implement local hashing to avoid sending passwords over the network
-    import hashlib
-
     print("[Step 4] Generating API Key hash locally...")
     # Use Blake2b hash algorithm
     hash_obj = hashlib.blake2b()
@@ -108,8 +107,15 @@ def increase_swap_size():
 
 # Function to create and configure the systemd service for Ergo Node
 def create_ergo_node_service(node_path, version, data_dir, username):
+    try:
+        user_info = pwd.getpwnam(username)
+        home_dir = user_info.pw_dir
+    except KeyError:
+        print(f"\n[Error] User '{username}' does not exist.\n")
+        sys.exit(1)
+
     service_file_path = f"/etc/systemd/system/ergo-node.service"
-    temp_service_file = f"/home/{username}/ergo-node.service"
+    temp_service_file = os.path.join(home_dir, 'ergo-node.service')
 
     print("[Step 5] Creating systemd service for Ergo Node...")
 
@@ -155,7 +161,7 @@ WantedBy=multi-user.target
         sys.exit(1)
 
 # Function to start and enable the Ergo Node service
-def start_services(username):
+def start_services():
     print("[Step 6] Starting and enabling Ergo Node service...")
 
     # Reload systemd daemon to recognize the new service
@@ -179,7 +185,14 @@ def start_services(username):
 
 # Function to configure user aliases
 def alias_config(username):
-    alias_file_path = f"/home/{username}/.bash_aliases"
+    try:
+        user_info = pwd.getpwnam(username)
+        home_dir = user_info.pw_dir
+    except KeyError:
+        print(f"\n[Error] User '{username}' does not exist.\n")
+        sys.exit(1)
+
+    alias_file_path = os.path.join(home_dir, '.bash_aliases')
 
     print("[Step 7] Configuring user aliases...")
 
@@ -200,17 +213,20 @@ alias ergo-help="cat {alias_file_path}"
         print(f"[Success] Aliases added to {alias_file_path}")
 
         # Ensure .bashrc sources .bash_aliases
-        bashrc_path = f"/home/{username}/.bashrc"
-        with open(bashrc_path, 'r') as file:
-            bashrc_content = file.read()
-            source_line = f"source ~/.bash_aliases"
-            if source_line not in bashrc_content:
-                with open(bashrc_path, 'a') as file_append:
-                    file_append.write(f"\n# Source Ergo aliases\n{source_line}\n")
-                print(f"[Success] Added source line to {bashrc_path}")
-            else:
-                print(f"[Info] {bashrc_path} already sources .bash_aliases")
-        print("[Success] Alias configuration completed.\n")
+        bashrc_path = os.path.join(home_dir, '.bashrc')
+        if os.path.exists(bashrc_path):
+            with open(bashrc_path, 'r') as file:
+                bashrc_content = file.read()
+                source_line = f"source ~/.bash_aliases"
+                if source_line not in bashrc_content:
+                    with open(bashrc_path, 'a') as file_append:
+                        file_append.write(f"\n# Source Ergo aliases\n{source_line}\n")
+                    print(f"[Success] Added source line to {bashrc_path}")
+                else:
+                    print(f"[Info] {bashrc_path} already sources .bash_aliases")
+            print("[Success] Alias configuration completed.\n")
+        else:
+            print(f"\n[Warning] {bashrc_path} does not exist. Aliases may not be loaded automatically.\n")
     except Exception as e:
         print(f"\n[Error] An error occurred while configuring aliases: {e}\n")
         sys.exit(1)
@@ -317,11 +333,11 @@ dataDir = "{data_dir}"
 def main():
     print("\n\n")
     print("#############################################")
-    print("#      Ergo Node Setup Script v2.1          #")
+    print("#      Ergo Node Setup Script v2.2          #")
     print("#############################################\n")
 
     # Prompt user for installation directory
-    default_node_path = f"/home/{getpass.getuser()}"
+    default_node_path = os.path.expanduser("~")
     node_path_input = input(f"Enter the path where you want to install the Ergo node (default {default_node_path}): ").strip()
     node_path = node_path_input if node_path_input else default_node_path
     print(f"[Input] Using Ergo node path: {node_path}\n")
@@ -339,8 +355,23 @@ def main():
     username = username_input if username_input else current_user
     print(f"[Input] Using username: {username}\n")
 
+    if username == 'root':
+        print("[Warning] It is not recommended to run the Ergo node as the 'root' user for security reasons.")
+        proceed = input("Do you want to proceed with 'root' as the username? (yes/no): ").strip().lower()
+        if proceed not in ['yes', 'y']:
+            print("Please run the script again with a non-root username.")
+            sys.exit(1)
+
+    # Get the home directory for the specified username
+    try:
+        user_info = pwd.getpwnam(username)
+        home_dir = user_info.pw_dir
+    except KeyError:
+        print(f"\n[Error] User '{username}' does not exist.\n")
+        sys.exit(1)
+
     # Define the data directory
-    default_data_dir = f"/home/{username}/.ergo"  # Default data directory
+    default_data_dir = os.path.join(home_dir, '.ergo')  # Default data directory
     # Optionally, allow user to input a different data directory
     data_dir_input = input(f"Enter the data directory for Ergo node (default is {default_data_dir}): ").strip()
     data_dir = data_dir_input if data_dir_input else default_data_dir
@@ -351,7 +382,7 @@ def main():
     setup_ergo_node(node_path, ergo_version, data_dir, username)
     increase_swap_size()
     create_ergo_node_service(node_path, ergo_version, data_dir, username)
-    start_services(username)
+    start_services()
     alias_config(username)
 
     # Final instructions
