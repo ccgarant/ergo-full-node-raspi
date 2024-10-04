@@ -15,7 +15,6 @@
 #
 #######################################################################
 
-
 import os
 import subprocess
 import sys
@@ -109,12 +108,12 @@ def increase_swap_size():
 
 # Function to create and configure the systemd service for Ergo Node
 def create_ergo_node_service(node_path, version, data_dir, username):
-    service_file_path = "/etc/systemd/system/ergo-node.service"
+    service_file_path = f"/etc/systemd/system/ergo-node.service"
+    temp_service_file = f"/home/{username}/ergo-node.service"
 
     print("[Step 5] Creating systemd service for Ergo Node...")
 
-    service_file_contents = f"""
-[Unit]
+    service_file_contents = f"""[Unit]
 Description=Ergo Node Service
 Wants=network-online.target
 After=network-online.target
@@ -137,19 +136,23 @@ PIDFile={data_dir}/ergo.pid
 
 [Install]
 WantedBy=multi-user.target
-    """
+"""
 
     try:
-        with open(service_file_path, "w") as service_file:
+        # Write the service file to a temporary location
+        with open(temp_service_file, "w") as service_file:
             service_file.write(service_file_contents)
-        print(f"[Success] Service file created at {service_file_path}")
-    except Exception as e:
-        print(f"\n[Error] Failed to write service file: {e}\n")
-        sys.exit(1)
+        print(f"[Success] Service file created at {temp_service_file}")
 
-    # Set permissions for the service file
-    run_sudo_command(f"chmod 644 {service_file_path}")
-    print(f"[Success] Service file permissions set to 644.\n")
+        # Use sudo to move the service file to /etc/systemd/system/
+        run_sudo_command(f"mv {temp_service_file} {service_file_path}")
+
+        # Set permissions for the service file
+        run_sudo_command(f"chmod 644 {service_file_path}")
+        print(f"[Success] Service file moved to {service_file_path} and permissions set to 644.\n")
+    except Exception as e:
+        print(f"\n[Error] Failed to create service file: {e}\n")
+        sys.exit(1)
 
 # Function to start and enable the Ergo Node service
 def start_services(username):
