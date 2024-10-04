@@ -298,7 +298,7 @@ ergo {{
 }}
 scorex {{
     restApi {{
-        publicUrl = "http://[{public_ip}]:9053/"
+        publicUrl = "http://[{public_ip}]:9053"
         apiKeyHash = "{api_key_hash}"
     }}
     network {{
