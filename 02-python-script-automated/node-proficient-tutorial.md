@@ -37,7 +37,7 @@ git clone 'https://github.com/ccgarant/ergo-full-node-raspi.git'
 Use the `cd` command to enter the program directory:
 
 ```bash
-cd 02-python-script-automated-setup
+cd 02-python-script-automated
 ```
 
 4. **Make the Program Executable:**
