@@ -72,10 +72,9 @@ def update_and_install_java():
 
 # Function to securely get API Key hash
 def set_api_key(password):
-    print("[Step 4] Generating API Key hash locally...")
-    # Use Blake2b hash algorithm
-    hash_obj = hashlib.blake2b()
-    hash_obj.update(password.encode('utf-8'))
+    print("[Step 4] Generating API Key hash using Blake2b256...")
+    # Use Blake2b hash algorithm with digest_size=32 (256 bits)
+    hash_obj = hashlib.blake2b(password.encode('utf-8'), digest_size=32)
     api_key_hash = hash_obj.hexdigest()
     print("[Success] API Key hash generated successfully.\n")
     return api_key_hash
@@ -365,7 +364,7 @@ dataDir = "{data_dir}"
 def main():
     print("\n\n")
     print("#############################################")
-    print("#      Ergo Node Setup Script v2.6          #")
+    print("#      Ergo Node Setup Script v2.7          #")
     print("#############################################\n")
 
     # Prompt user for installation directory
