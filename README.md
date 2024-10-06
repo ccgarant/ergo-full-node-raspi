@@ -15,10 +15,10 @@ The tutorial includes 3 Tutorial Levels:
 ## [Manual Step-by-Step Setup (Best For Detail Learning)](/01-manual-step-by-step/node-beginner-tutorial.md)
 Recommended for just getting started, step-by-step guide with heavy hand holding.
 
-## [Python Script Automated Setup (**RECOMMENDED**)](/02-python-script-automated-setup/node-proficient-tutorial.md)
+## [Python Script Automated Setup (**RECOMMENDED**)](/02-python-script-automated/node-proficient-tutorial.md)
 Recommended after you've setup a node a few times, automated script for setup. Quick start.
 
-## [Docker Ergo Node (IN-WORK)](/03-ergo-docker-node/node-specialist-tutorial.md)
+## [Docker Ergo Node (IN-WORK)](/03-docker-ergo-node/node-specialist-tutorial.md)
 (COMING SOON) Recommended docker ergo node for the super savvy. This will allow bootstrap from genesis or start from a snapshot for a quick sync.
 
 --------------------------------------
