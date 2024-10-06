@@ -56,35 +56,22 @@ Execute the program with the following command for a full node from scratch (no 
 sudo python ergo_node_setup.py
 ```
 
-Or for a super light weight node using bootstrapping and nipopow use this:
-
-```bash
-sudo python ergo_node_setup_lite.py
-```
-
-
 The program will start and guide you through the Ergo Node setup process. Follow the prompts, and leave the prompt blank to use default settings when applicable.
 
 **Important:** The program will perform tasks that require administrative (sudo) privileges. You may be prompted to enter your password during the execution of certain commands.
 
-6. **Reboot (Optional):**
-
-After the Ergo Node setup is complete, the program will prompt you to reboot your Raspberry Pi.
-
-If you choose to reboot, the Raspberry Pi will restart. If not, you can manually reboot later with the `sudo reboot` command.
-
-## Program Description
+## Script Programming Description
 
 This Python program automates the following tasks for setting up an Ergo node on a Raspberry Pi:
 
-1. Update and upgrade the Linux system.
-2. Download and install Java.
-3. Download and install the Ergo node software.
-4. Create the Ergo node directory, configuration file, API key hash, and obtain the user's IP address.
-5. Start the Ergo Node.
-6. Configure system services to initiate the Ergo Node on startup.
-7. Configure user aliases for Ergo node commands.
-8. Optionally, reboot the Raspberry Pi to apply configuration changes.
+**Tasks:**   
+1. Update and upgrade the Linux system
+2. Download and install Java
+3. Download and install Ergo node software
+4. Create Ergo node directories, config file, API key hash, get user IP
+5. Configure systemd service to manage Ergo node
+6. Configure user aliases for node commands
+7. Reboot system (optional)
 
 ## Ergo Node Commands
 
