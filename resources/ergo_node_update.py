@@ -4,7 +4,6 @@ import sys
 import subprocess
 import json
 import urllib.request
-import getpass
 
 def run_command(command, capture_output=True):
     try:
@@ -14,9 +13,7 @@ def run_command(command, capture_output=True):
             stderr=subprocess.PIPE,
             shell=True,
             check=True,
-            executable="/bin/bash",  # Use bash shell to recognize aliases
-            text=True,
-            env=os.environ.copy()
+            text=True
         )
         if capture_output:
             return result.stdout.strip()
@@ -90,7 +87,7 @@ def update_systemd_service(node_path, new_version):
     new_service_contents = "\n".join(service_lines)
 
     # Write the updated service file to a temporary location
-    temp_service_file = os.path.join(os.getcwd(), 'ergo-node.service')
+    temp_service_file = os.path.join(ergo_node_path, 'ergo-node.service')
     try:
         with open(temp_service_file, "w") as service_file:
             service_file.write(new_service_contents)
@@ -105,9 +102,10 @@ def update_systemd_service(node_path, new_version):
     print(f"[Success] Service file updated at {service_file_path}\n")
 
 def restart_ergo_node_service():
-    print("[Info] Restarting Ergo Node service using alias 'ergo-restart'...")
-    # Use the 'ergo-restart' alias set up by ergo_node_setup.py
-    run_command("ergo-restart")
+    print("[Info] Restarting Ergo Node service...")
+    # Use the actual command instead of the alias
+    run_command("sudo systemctl daemon-reload")
+    run_command("sudo systemctl restart ergo-node.service")
     print("[Success] Ergo Node service restarted.\n")
 
 def main():
@@ -117,21 +115,7 @@ def main():
 
     print("Prerequisites:")
     print("- This script assumes that you have installed the Ergo node using 'ergo_node_setup.py'.")
-    print("- The script uses the aliases set up by 'ergo_node_setup.py' for service management.\n")
-
-    # Ensure that the aliases are available
-    shell = os.environ.get('SHELL', '/bin/bash')
-    if shell.endswith('bash'):
-        bashrc_path = os.path.expanduser("~/.bashrc")
-        if os.path.exists(bashrc_path):
-            # Source the .bashrc to load aliases
-            run_command(f"source {bashrc_path}")
-        else:
-            print("[Error] .bashrc not found. Aliases may not be available.")
-            sys.exit(1)
-    else:
-        print("[Warning] Non-bash shell detected. Aliases may not be available.")
-        sys.exit(1)
+    print("- The script manages the service directly using system commands.\n")
 
     # Get the user's home directory
     home_dir = os.path.expanduser("~")
@@ -164,7 +148,7 @@ def main():
     update_ergo_node(node_path, latest_version)
     update_systemd_service(node_path, latest_version)
 
-    # Restart the Ergo node service using the alias
+    # Restart the Ergo node service using the actual command
     restart_ergo_node_service()
 
     print("#############################################")
@@ -174,8 +158,8 @@ def main():
     print(f"[Success] Your Ergo Node has been updated to version {latest_version}.\n")
 
     # Suggest checking the status using the alias
-    print("You can check the status of your Ergo Node service using the alias:")
-    print("  ergo-status\n")
+    print("You can check the status of your Ergo Node service using:")
+    print("  systemctl status ergo-node.service\n")
 
 if __name__ == "__main__":
     main()
