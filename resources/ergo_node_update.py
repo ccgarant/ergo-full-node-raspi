@@ -2,6 +2,9 @@
 import os
 import sys
 import subprocess
+import json
+import urllib.request
+import getpass
 
 def run_command(command, capture_output=True):
     try:
@@ -11,30 +14,15 @@ def run_command(command, capture_output=True):
             stderr=subprocess.PIPE,
             shell=True,
             check=True,
-            text=True
+            executable="/bin/bash",  # Use bash shell to recognize aliases
+            text=True,
+            env=os.environ.copy()
         )
         if capture_output:
             return result.stdout.strip()
         return ""
     except subprocess.CalledProcessError as e:
         print(f"\n[Error] Command failed: {command}")
-        print(f"[Error] Error Output: {e.stderr.strip()}\n")
-        sys.exit(1)
-
-def run_sudo_command(command):
-    try:
-        sudo_command = f"sudo {command}"
-        subprocess.run(
-            sudo_command,
-            shell=True,
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        print(f"[Success] Executed: {sudo_command}")
-    except subprocess.CalledProcessError as e:
-        print(f"\n[Error] Failed to execute: {sudo_command}")
         print(f"[Error] Error Output: {e.stderr.strip()}\n")
         sys.exit(1)
 
@@ -46,6 +34,29 @@ def get_current_ergo_version(node_path):
         if file.startswith("ergo-") and file.endswith(".jar"):
             return file.replace("ergo-", "").replace(".jar", "")
     return None
+
+def get_latest_ergo_version():
+    print("[Info] Fetching the latest Ergo mainnet release version from GitHub...")
+    try:
+        url = "https://api.github.com/repos/ergoplatform/ergo/releases"
+        with urllib.request.urlopen(url) as response:
+            data = response.read()
+            releases = json.loads(data.decode('utf-8'))
+
+            for release in releases:
+                # Skip pre-releases and drafts
+                if not release['prerelease'] and not release['draft']:
+                    version_tag = release['tag_name']
+                    # Remove the leading 'v' if present
+                    if version_tag.startswith('v'):
+                        version_tag = version_tag[1:]
+                    print(f"[Info] Latest mainnet release version: {version_tag}\n")
+                    return version_tag
+            print("[Error] No suitable mainnet release found.")
+            sys.exit(1)
+    except Exception as e:
+        print(f"[Error] Failed to fetch the latest release version: {e}")
+        sys.exit(1)
 
 def update_ergo_node(node_path, new_version):
     ergo_node_path = os.path.join(node_path, "ergo-node")
@@ -89,21 +100,38 @@ def update_systemd_service(node_path, new_version):
         sys.exit(1)
 
     # Move the updated service file to /etc/systemd/system/
-    run_sudo_command(f"mv {temp_service_file} {service_file_path}")
-    run_sudo_command(f"chmod 644 {service_file_path}")
+    run_command(f"sudo mv {temp_service_file} {service_file_path}")
+    run_command(f"sudo chmod 644 {service_file_path}")
     print(f"[Success] Service file updated at {service_file_path}\n")
 
 def restart_ergo_node_service():
-    print("[Info] Restarting Ergo Node service...")
-    run_sudo_command("systemctl daemon-reload")
-    run_sudo_command("systemctl restart ergo-node.service")
+    print("[Info] Restarting Ergo Node service using alias 'ergo-restart'...")
+    # Use the 'ergo-restart' alias set up by ergo_node_setup.py
+    run_command("ergo-restart")
     print("[Success] Ergo Node service restarted.\n")
 
 def main():
     print("\n#############################################")
     print("#         Ergo Node Update Script           #")
     print("#############################################\n")
-    print("\nAssumes ergo_node_setup.py script has already been run.\n")
+
+    print("Prerequisites:")
+    print("- This script assumes that you have installed the Ergo node using 'ergo_node_setup.py'.")
+    print("- The script uses the aliases set up by 'ergo_node_setup.py' for service management.\n")
+
+    # Ensure that the aliases are available
+    shell = os.environ.get('SHELL', '/bin/bash')
+    if shell.endswith('bash'):
+        bashrc_path = os.path.expanduser("~/.bashrc")
+        if os.path.exists(bashrc_path):
+            # Source the .bashrc to load aliases
+            run_command(f"source {bashrc_path}")
+        else:
+            print("[Error] .bashrc not found. Aliases may not be available.")
+            sys.exit(1)
+    else:
+        print("[Warning] Non-bash shell detected. Aliases may not be available.")
+        sys.exit(1)
 
     # Get the user's home directory
     home_dir = os.path.expanduser("~")
@@ -119,34 +147,35 @@ def main():
 
     print(f"[Info] Current Ergo Node version: {current_version}")
 
-    # Prompt user for the new Ergo version
-    new_version_input = input(f"Enter the new Ergo version to install (current is {current_version}): ").strip()
-    if not new_version_input:
-        print("[Error] No version entered. Exiting.")
-        sys.exit(1)
-    new_version = new_version_input
-    print(f"[Input] New Ergo version: {new_version}\n")
+    # Get the latest Ergo version from GitHub
+    latest_version = get_latest_ergo_version()
 
-    if new_version == current_version:
-        print("[Info] The new version is the same as the current version. No update needed.")
+    if latest_version == current_version:
+        print("[Info] You are already running the latest Ergo Node version.")
         sys.exit(0)
 
-    # Confirm with the user
-    confirm = input(f"Are you sure you want to update from version {current_version} to {new_version}? (yes/no): ").strip().lower()
+    # Prompt user to confirm updating to the latest version
+    confirm = input(f"Do you want to update to the latest version {latest_version}? (yes/no): ").strip().lower()
     if confirm not in ['yes', 'y']:
         print("Update canceled.")
         sys.exit(0)
 
     # Perform the update
-    update_ergo_node(node_path, new_version)
-    update_systemd_service(node_path, new_version)
+    update_ergo_node(node_path, latest_version)
+    update_systemd_service(node_path, latest_version)
+
+    # Restart the Ergo node service using the alias
     restart_ergo_node_service()
 
     print("#############################################")
     print("#      Ergo Node Update Complete!           #")
     print("#############################################\n")
 
-    print(f"[Success] Your Ergo Node has been updated to version {new_version}.\n")
+    print(f"[Success] Your Ergo Node has been updated to version {latest_version}.\n")
+
+    # Suggest checking the status using the alias
+    print("You can check the status of your Ergo Node service using the alias:")
+    print("  ergo-status\n")
 
 if __name__ == "__main__":
     main()

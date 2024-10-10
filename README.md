@@ -22,7 +22,7 @@ Recommended after you've setup a node a few times, automated script for setup. Q
 (COMING SOON) Recommended docker ergo node for the super savvy. This will allow bootstrap from genesis or start from a snapshot for a quick sync.
 
 ## [Ergo Node Update](/resources/ergo_node_update.py)
-To update your ergo node, use this script in resources.
+To update your ergo node, use this script in resources. Run by `python3 ergo_node_update.py` from \resources directory.
 
 --------------------------------------
 
