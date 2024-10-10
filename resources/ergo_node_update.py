@@ -24,21 +24,21 @@ Prerequisites:
 - You must have sudo privileges to move files and restart services.
 """
 
-# Import necessary modules for the script
-import os                   # For interacting with the operating system
-import sys                  # For system-specific parameters and functions
-import subprocess           # For running shell commands
-import json                 # For parsing JSON data
-import urllib.request       # For making HTTP requests
-import re                   # For regular expressions (pattern matching)
+import os
+import sys
+import subprocess
+import json
+import urllib.request
+import re
 
-def run_command(command, capture_output=True):
+def run_command(command, capture_output=True, timeout=None):
     """
     Executes a shell command and handles errors.
 
     Parameters:
     - command (str): The shell command to execute.
     - capture_output (bool): Whether to capture and return the command's output.
+    - timeout (int or None): The timeout in seconds for the command execution.
 
     Returns:
     - str: The command's output if capture_output is True.
@@ -53,12 +53,17 @@ def run_command(command, capture_output=True):
             stderr=subprocess.PIPE if capture_output else None,  # Capture stderr if required
             shell=True,          # Execute the command in the shell
             check=True,          # Raise an exception if the command exits with a non-zero status
-            text=True            # Return output as a string (text), not bytes
+            text=True,           # Return output as a string (text), not bytes
+            timeout=timeout      # Set a timeout to prevent hanging
         )
         if capture_output:
             # Return the command's output, stripped of leading/trailing whitespace
             return result.stdout.strip()
         return ""
+    except subprocess.TimeoutExpired:
+        # Handle timeout exceptions
+        print(f"\n[Error] Command timed out: {command}\n")
+        sys.exit(1)
     except subprocess.CalledProcessError as e:
         # Handle errors if the command fails
         print(f"\n[Error] Command failed: {command}")
@@ -233,17 +238,26 @@ def check_node_version_in_logs(version):
     print("\n[Info] Checking the Ergo Node logs for version information...")
     try:
         # Construct the command to search the logs for the version
-        # This command searches for lines containing 'Version: <version>'
-        log_output = run_command(f"sudo journalctl -u ergo-node.service | grep -E 'Version:? {version}' | tail -1")
-        if version in log_output:
-            # If the version is found in the logs, print a proof message
-            print(f"[Proof] Ergo Node is running version {version} as per logs.")
-        else:
-            # If the version is not found, print a warning with the last matching log entry
-            print(f"[Warning] Could not confirm the node version from the logs. Last version in logs: {log_output}")
-    except Exception as e:
-        # Handle exceptions if the log check fails
-        print(f"\n[Error] Failed to check logs: {e}\n")
+        # Attempt to run without 'sudo' first
+        command = f"journalctl -u ergo-node.service | grep -E 'Version:? {version}' | tail -1"
+        log_output = run_command(command, timeout=10)
+    except subprocess.CalledProcessError:
+        # If permission is denied, inform the user
+        print("[Warning] Permission denied when accessing logs without 'sudo'. Trying with 'sudo'...")
+        try:
+            # Try running the command with 'sudo'
+            command = f"sudo journalctl -u ergo-node.service | grep -E 'Version:? {version}' | tail -1"
+            log_output = run_command(command, timeout=10)
+        except subprocess.CalledProcessError as e:
+            print(f"[Error] Failed to access logs even with 'sudo'. Error: {e}")
+            return
+
+    if version in log_output:
+        # If the version is found in the logs, print a proof message
+        print(f"[Proof] Ergo Node is running version {version} as per logs.")
+    else:
+        # If the version is not found, print a warning with the last matching log entry
+        print(f"[Warning] Could not confirm the node version from the logs. Last version in logs: {log_output}")
 
 def main():
     """
