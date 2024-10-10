@@ -6,22 +6,23 @@ Ergo Node Update Script
 This script automates the process of updating your Ergo Node to the latest mainnet release.
 It performs the following tasks:
 
-1. Determines the current version of the Ergo Node installed.
-2. Fetches the latest mainnet release version from the Ergo GitHub repository.
-3. Compares the current version with the latest version.
+1. Checks if it's being run with root privileges.
+2. Determines the current version of the Ergo Node installed.
+3. Fetches the latest mainnet release version from the Ergo GitHub repository.
+4. Compares the current version with the latest version.
    - If already running the latest version, it provides proofs and exits.
-4. Prompts the user to confirm updating to the latest version.
-5. Downloads the latest Ergo Node JAR file.
-6. Updates the systemd service file to point to the new JAR version throughout the file.
-7. Restarts the Ergo Node service to apply the changes.
-8. Checks the logs to confirm the node is running the expected version.
-9. Provides confirmation and instructions to verify the update.
+5. Prompts the user to confirm updating to the latest version.
+6. Downloads the latest Ergo Node JAR file.
+7. Updates the systemd service file to point to the new JAR version throughout the file.
+8. Restarts the Ergo Node service to apply the changes.
+9. Checks the logs to confirm the node is running the expected version.
+10. Provides confirmation and instructions to verify the update.
 
 Prerequisites:
 
 - The script assumes that you have installed the Ergo Node using 'ergo_node_setup.py'.
 - The node should be installed in the default directory: '~/ergo-node'.
-- You must have sudo privileges to move files and restart services.
+- You must have root privileges to run this script (use 'sudo').
 """
 
 import os
@@ -30,6 +31,17 @@ import subprocess
 import json
 import urllib.request
 import re
+
+def check_root_privileges():
+    """
+    Checks if the script is being run with root privileges.
+    If not, it exits and prompts the user to run the script with 'sudo'.
+    """
+    if os.geteuid() != 0:
+        print("[Error] This script must be run with root privileges.")
+        print("Please run the script using 'sudo':")
+        print("  sudo python3 {}".format(sys.argv[0]))
+        sys.exit(1)
 
 def run_command(command, capture_output=True, timeout=None):
     """
@@ -46,7 +58,6 @@ def run_command(command, capture_output=True, timeout=None):
     If the command fails, the script prints an error message and exits.
     """
     try:
-        # Run the shell command
         result = subprocess.run(
             command,
             stdout=subprocess.PIPE if capture_output else None,  # Capture stdout if required
@@ -57,7 +68,6 @@ def run_command(command, capture_output=True, timeout=None):
             timeout=timeout      # Set a timeout to prevent hanging
         )
         if capture_output:
-            # Return the command's output, stripped of leading/trailing whitespace
             return result.stdout.strip()
         return ""
     except subprocess.TimeoutExpired:
@@ -67,11 +77,11 @@ def run_command(command, capture_output=True, timeout=None):
     except subprocess.CalledProcessError as e:
         # Handle errors if the command fails
         print(f"\n[Error] Command failed: {command}")
+        print(f"[Error] Return Code: {e.returncode}")
         if capture_output:
-            # Print the error output from the command
+            print(f"[Error] Output: {e.output.strip()}")
             print(f"[Error] Error Output: {e.stderr.strip()}\n")
         else:
-            # Inform the user that the command exited with a non-zero status
             print(f"[Error] Command exited with non-zero status.\n")
         # Exit the script with an error code
         sys.exit(1)
@@ -194,23 +204,18 @@ def update_systemd_service(node_path, current_version, new_version):
     # Replace all occurrences of the old JAR file name with the new one in the service file content
     updated_service_contents = re.sub(old_jar_pattern, new_jar, service_contents)
 
-    # Write the updated service file to a temporary location in the node installation directory
-    temp_service_file = os.path.join(node_path, 'ergo-node.service')
+    # Write the updated service file to the systemd directory
     try:
-        with open(temp_service_file, "w") as service_file:
-            # Write the updated service content to the temporary file
+        with open(service_file_path, "w") as service_file:
+            # Write the updated service content to the service file
             service_file.write(updated_service_contents)
-        print(f"[Success] Updated service file created at {temp_service_file}")
+        # Set the correct permissions for the service file
+        run_command(f"chmod 644 {service_file_path}")
+        print(f"[Success] Service file updated at {service_file_path}\n")
     except Exception as e:
         # Handle exceptions if the file cannot be written
         print(f"\n[Error] Failed to write updated service file: {e}\n")
         sys.exit(1)
-
-    # Move the updated service file to the systemd directory
-    run_command(f"sudo mv {temp_service_file} {service_file_path}")
-    # Set the correct permissions for the service file
-    run_command(f"sudo chmod 644 {service_file_path}")
-    print(f"[Success] Service file updated at {service_file_path}\n")
 
 def restart_ergo_node_service():
     """
@@ -220,9 +225,9 @@ def restart_ergo_node_service():
     """
     print("[Info] Restarting Ergo Node service...")
     # Reload the systemd daemon to recognize changes
-    run_command("sudo systemctl daemon-reload")
+    run_command("systemctl daemon-reload")
     # Restart the Ergo Node service
-    run_command("sudo systemctl restart ergo-node.service")
+    run_command("systemctl restart ergo-node.service")
     print("[Success] Ergo Node service restarted.\n")
 
 def check_node_version_in_logs(version):
@@ -264,6 +269,7 @@ def main():
     The main function orchestrates the update process.
 
     It performs the following steps:
+    - Checks for root privileges.
     - Prints the script header and prerequisites.
     - Determines the node installation path.
     - Gets the current and latest Ergo Node versions.
@@ -271,6 +277,9 @@ def main():
     - Performs the update and restarts the service.
     - Checks the logs to confirm the node is running the expected version.
     """
+    # Check if the script is run with root privileges
+    check_root_privileges()
+
     # Print the script header
     print("\n#############################################")
     print("#         Ergo Node Update Script           #")
@@ -279,10 +288,16 @@ def main():
     # Print prerequisites
     print("Prerequisites:")
     print("- This script assumes that you have installed the Ergo Node using 'ergo_node_setup.py'.")
-    print("- The script manages the service directly using system commands.\n")
+    print("- The script manages the service directly using system commands.")
+    print("- You must run this script with 'sudo'.\n")
 
-    # Get the user's home directory (e.g., '/home/username')
+    # Get the user's home directory (e.g., '/root' when run with sudo)
     home_dir = os.path.expanduser("~")
+
+    # Get the original user's home directory if available
+    original_user = os.getenv("SUDO_USER")
+    if original_user:
+        home_dir = os.path.expanduser(f"~{original_user}")
 
     # Define the node installation directory (default: '~/ergo-node')
     node_path = os.path.join(home_dir, "ergo-node")

@@ -5,6 +5,7 @@ This assumes that you have basic knowledge of Raspberry Pi and Linux system admi
 ## Prerequisites
 
 - The script assumes that you have installed the Ergo Node using 'ergo_node_setup.py'.
+- You must have root privileges to run this script (use 'sudo').
 - The node should be installed in the default directory: '~/ergo-node'.
 - You must have sudo privileges to move files and restart services.
 
@@ -19,7 +20,7 @@ chmod +x ergo_node_update.py
 Run the program
 
 ```bash
-python3 ergo_node_update.py
+sudo python3 ergo_node_update.py
 ```
 
 The program will start and guide you through the Ergo Node setup process. Follow the prompts, and leave the prompt blank to use default settings when applicable.
