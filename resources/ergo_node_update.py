@@ -154,9 +154,9 @@ def main():
         print("[Info] You are already running the latest Ergo Node version.")
         sys.exit(0)
 
-    # Prompt user to confirm updating to the latest version
-    confirm = input(f"Do you want to update to the latest version {latest_version}? (yes/no): ").strip().lower()
-    if confirm not in ['yes', 'y']:
+    # Prompt user to confirm updating to the latest version, default to 'yes' on Enter
+    confirm = input(f"Do you want to update to the latest version {latest_version}? ([yes]/no). Press Enter for default yes: ").strip().lower()
+    if confirm in ['no', 'n']:
         print("Update canceled.")
         sys.exit(0)
 
