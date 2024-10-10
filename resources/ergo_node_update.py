@@ -1,4 +1,28 @@
 #!/usr/bin/env python3
+"""
+Ergo Node Update Script
+-----------------------
+
+This script automates the process of updating your Ergo Node to the latest mainnet release.
+It performs the following tasks:
+
+1. Determines the current version of the Ergo Node installed.
+2. Fetches the latest mainnet release version from the Ergo GitHub repository.
+3. Compares the current version with the latest version.
+   - If already running the latest version, it provides proofs and exits.
+4. Prompts the user to confirm updating to the latest version.
+5. Downloads the latest Ergo Node JAR file.
+6. Updates the systemd service file to point to the new JAR version.
+7. Restarts the Ergo Node service to apply the changes.
+8. Provides confirmation and instructions to verify the update.
+
+Prerequisites:
+
+- The script assumes that you have installed the Ergo Node using 'ergo_node_setup.py'.
+- The node should be installed in the default directory: '~/ergo-node'.
+- You must have sudo privileges to move files and restart services.
+"""
+
 import os
 import sys
 import subprocess
@@ -9,8 +33,8 @@ def run_command(command, capture_output=True):
     try:
         result = subprocess.run(
             command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE if capture_output else None,
+            stderr=subprocess.PIPE if capture_output else None,
             shell=True,
             check=True,
             text=True
@@ -20,7 +44,10 @@ def run_command(command, capture_output=True):
         return ""
     except subprocess.CalledProcessError as e:
         print(f"\n[Error] Command failed: {command}")
-        print(f"[Error] Error Output: {e.stderr.strip()}\n")
+        if capture_output:
+            print(f"[Error] Error Output: {e.stderr.strip()}\n")
+        else:
+            print(f"[Error] Command exited with non-zero status.\n")
         sys.exit(1)
 
 def get_current_ergo_version(node_path):
@@ -115,7 +142,7 @@ def main():
     print("#############################################\n")
 
     print("Prerequisites:")
-    print("- This script assumes that you have installed the Ergo node using 'ergo_node_setup.py'.")
+    print("- This script assumes that you have installed the Ergo Node using 'ergo_node_setup.py'.")
     print("- The script manages the service directly using system commands.\n")
 
     # Get the user's home directory
@@ -134,9 +161,34 @@ def main():
     # Get the latest Ergo version from GitHub
     latest_version = get_latest_ergo_version()
 
-    # If current_version is known and equals latest_version, exit
+    # If current_version is known and equals latest_version
     if current_version and current_version == latest_version:
         print("[Info] You are already running the latest Ergo Node version.")
+        # Print proofs
+        print("\n[Proof] Current Ergo Node version detected from JAR file: {}".format(current_version))
+
+        # Verify the version in the systemd service file
+        service_file_path = "/etc/systemd/system/ergo-node.service"
+        try:
+            with open(service_file_path, "r") as service_file:
+                service_contents = service_file.read()
+            service_points_to_correct_version = False
+            for line in service_contents.splitlines():
+                if line.startswith("ExecStart="):
+                    if f"ergo-{current_version}.jar" in line:
+                        service_points_to_correct_version = True
+                        print("[Proof] Systemd service file points to the correct JAR version.")
+                    else:
+                        print("[Warning] Systemd service file does not point to the expected JAR version.")
+            if not service_points_to_correct_version:
+                print("[Warning] The ExecStart line in the service file does not match the current version.")
+            print("[Proof] Service file checked: {}".format(service_file_path))
+        except Exception as e:
+            print(f"\n[Error] Failed to read service file: {e}\n")
+
+        # Check the status of the Ergo Node service
+        print("\n[Info] Checking the status of the Ergo Node service...")
+        run_command("systemctl status ergo-node.service", capture_output=False)
         sys.exit(0)
 
     # Prompt user to confirm updating to the latest version, default to 'yes' on Enter
@@ -154,7 +206,7 @@ def main():
     update_ergo_node(node_path, latest_version)
     update_systemd_service(node_path, latest_version)
 
-    # Restart the Ergo node service using the actual command
+    # Restart the Ergo Node service using the actual command
     restart_ergo_node_service()
 
     print("#############################################")

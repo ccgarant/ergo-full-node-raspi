@@ -1,4 +1,4 @@
-# Ergo Node Proficient Tutorial
+# Ergo Node Python Script Setup Tutorial
 
 This assumes that you have basic knowledge of Raspberry Pi and Linux system administration.
 
