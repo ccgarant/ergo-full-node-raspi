@@ -16,7 +16,8 @@ It performs the following tasks:
 7. Updates the systemd service file to point to the new JAR version throughout the file.
 8. Restarts the Ergo Node service to apply the changes.
 9. Checks the status of the Ergo Node service.
-10. Prompts the user to run 'ergo-logs' or exit.
+10. Prints the node HTTP address for easy access.
+11. Prompts the user to view the Ergo Node logs or exit.
 
 Prerequisites:
 
@@ -31,6 +32,7 @@ import subprocess
 import json
 import urllib.request
 import re
+import socket
 
 def check_root_privileges():
     """
@@ -245,6 +247,50 @@ def restart_ergo_node_service():
     run_command("systemctl restart ergo-node.service")
     print("[Success] Ergo Node service restarted.\n")
 
+def get_ipv4_address():
+    """
+    Retrieves the primary non-loopback IPv4 address of the machine.
+
+    Returns:
+    - str: The IPv4 address as a string.
+    """
+    try:
+        # Create a socket and connect to an external host
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Doesn't need to be reachable
+        s.connect(('8.8.8.8', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+def get_node_port(ergo_conf_path):
+    """
+    Retrieves the node's REST API port from the ergo.conf file if specified.
+
+    Parameters:
+    - ergo_conf_path (str): The path to the ergo.conf file.
+
+    Returns:
+    - str: The port number as a string.
+    """
+    default_port = '9053'
+    try:
+        with open(ergo_conf_path, 'r') as conf_file:
+            for line in conf_file:
+                line = line.strip()
+                if line.startswith('scorex.restApi.bindPort'):
+                    # Line format: 'scorex.restApi.bindPort = 9053'
+                    parts = line.split('=')
+                    if len(parts) == 2:
+                        port = parts[1].strip()
+                        return port
+    except Exception as e:
+        pass
+    return default_port
+
 def main():
     """
     The main function orchestrates the update process.
@@ -257,7 +303,8 @@ def main():
     - Compares versions and prompts for update if necessary.
     - Performs the update and restarts the service.
     - Checks the status of the Ergo Node service.
-    - Prompts the user to run 'ergo-logs' or exit.
+    - Prints the node HTTP address for easy access.
+    - Prompts the user to view the Ergo Node logs or exit.
     """
     # Check if the script is run with root privileges
     check_root_privileges()
@@ -321,6 +368,15 @@ def main():
         print("\n[Info] Checking the status of the Ergo Node service...")
         run_command("systemctl status ergo-node.service", capture_output=False)
 
+        # Display the node HTTP address
+        ip_address = get_ipv4_address()
+        ergo_conf_path = os.path.join(node_path, "ergo.conf")
+        node_port = get_node_port(ergo_conf_path)
+        node_url = f"http://{ip_address}:{node_port}/panel/"
+
+        print(f"\nYou can access your Ergo Node in a web browser at:")
+        print(f"  {node_url}\n")
+
         # Prompt the user to run 'ergo-logs' or exit
         prompt_message = "Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
         user_input = input(prompt_message).strip().lower()
@@ -329,7 +385,7 @@ def main():
             sys.exit(0)
         else:
             print("\nDisplaying the last 100 lines of the Ergo Node logs:\n")
-            # Run the 'ergo-logs' command or display the logs
+            # Display the logs
             run_command("journalctl -u ergo-node.service -n 100 --no-pager", capture_output=False)
             sys.exit(0)
 
@@ -359,15 +415,24 @@ def main():
     print("\n[Info] Checking the status of the Ergo Node service...")
     run_command("systemctl status ergo-node.service", capture_output=False)
 
+    # Display the node HTTP address
+    ip_address = get_ipv4_address()
+    ergo_conf_path = os.path.join(node_path, "ergo.conf")
+    node_port = get_node_port(ergo_conf_path)
+    node_url = f"http://{ip_address}:{node_port}/panel/"
+
+    print(f"\nYou can access your Ergo Node in a web browser at:")
+    print(f"  {node_url}\n")
+
     # Prompt the user to run 'ergo-logs' or exit
-    prompt_message = "\nUpdate complete. Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
+    prompt_message = "Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
     user_input = input(prompt_message).strip().lower()
     if user_input in ['no', 'n']:
         print("\nUpdate complete. Exiting the script.")
         sys.exit(0)
     else:
         print("\nDisplaying the last 100 lines of the Ergo Node logs:\n")
-        # Run the 'ergo-logs' command or display the logs
+        # Display the logs
         run_command("journalctl -u ergo-node.service -n 100 --no-pager", capture_output=False)
         sys.exit(0)
 
