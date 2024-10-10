@@ -15,8 +15,8 @@ It performs the following tasks:
 6. Downloads the latest Ergo Node JAR file.
 7. Updates the systemd service file to point to the new JAR version throughout the file.
 8. Restarts the Ergo Node service to apply the changes.
-9. Checks the logs to confirm the node is running the expected version.
-10. Provides confirmation and instructions to verify the update.
+9. Checks the status of the Ergo Node service.
+10. Prompts the user to run 'ergo-logs' or exit.
 
 Prerequisites:
 
@@ -245,38 +245,6 @@ def restart_ergo_node_service():
     run_command("systemctl restart ergo-node.service")
     print("[Success] Ergo Node service restarted.\n")
 
-def check_node_version_in_logs(version):
-    """
-    Checks the Ergo Node logs to confirm it's running the expected version.
-
-    Parameters:
-    - version (str): The version to check for in the logs.
-
-    If the version is found in the logs, it prints a confirmation message.
-    Otherwise, it prints a warning.
-    """
-    print("\n[Info] Checking the Ergo Node logs for version information...")
-    try:
-        # Limit logs to the last 1 hour to reduce processing time
-        command = f"journalctl -u ergo-node.service --since '1 hour ago' | grep -E 'Version:? {version}' | tail -1"
-        log_output = run_command(command, timeout=30)  # Increased timeout to 30 seconds
-    except subprocess.CalledProcessError:
-        print("[Warning] Permission denied when accessing logs without 'sudo'. Trying with 'sudo'...")
-        try:
-            command = f"sudo journalctl -u ergo-node.service --since '1 hour ago' | grep -E 'Version:? {version}' | tail -1"
-            log_output = run_command(command, timeout=30)
-        except subprocess.CalledProcessError as e:
-            print(f"[Error] Failed to access logs even with 'sudo'. Error: {e}")
-            return
-    except subprocess.TimeoutExpired:
-        print(f"[Error] Command timed out when checking logs. Try increasing the timeout or limiting the log scope.")
-        return
-
-    if version in log_output:
-        print(f"[Proof] Ergo Node is running version {version} as per logs.")
-    else:
-        print(f"[Warning] Could not confirm the node version from the logs. Last version in logs: {log_output}")
-
 def main():
     """
     The main function orchestrates the update process.
@@ -288,7 +256,8 @@ def main():
     - Gets the current and latest Ergo Node versions.
     - Compares versions and prompts for update if necessary.
     - Performs the update and restarts the service.
-    - Checks the logs to confirm the node is running the expected version.
+    - Checks the status of the Ergo Node service.
+    - Prompts the user to run 'ergo-logs' or exit.
     """
     # Check if the script is run with root privileges
     check_root_privileges()
@@ -352,11 +321,17 @@ def main():
         print("\n[Info] Checking the status of the Ergo Node service...")
         run_command("systemctl status ergo-node.service", capture_output=False)
 
-        # Check the logs to confirm the node is running the expected version
-        check_node_version_in_logs(current_version)
-
-        # Exit the script since the node is already up-to-date
-        sys.exit(0)
+        # Prompt the user to run 'ergo-logs' or exit
+        prompt_message = "Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
+        user_input = input(prompt_message).strip().lower()
+        if user_input in ['no', 'n']:
+            print("\nUpdate complete. Exiting the script.")
+            sys.exit(0)
+        else:
+            print("\nDisplaying the last 100 lines of the Ergo Node logs:\n")
+            # Run the 'ergo-logs' command or display the logs
+            run_command("journalctl -u ergo-node.service -n 100 --no-pager", capture_output=False)
+            sys.exit(0)
 
     # Prompt the user to confirm updating to the latest version
     if current_version:
@@ -380,19 +355,21 @@ def main():
     # Restart the Ergo Node service to apply the changes
     restart_ergo_node_service()
 
-    # Check the logs to confirm the node is running the new version
-    check_node_version_in_logs(latest_version)
+    # Check the status of the Ergo Node service
+    print("\n[Info] Checking the status of the Ergo Node service...")
+    run_command("systemctl status ergo-node.service", capture_output=False)
 
-    # Print the update completion message
-    print("#############################################")
-    print("#      Ergo Node Update Complete!           #")
-    print("#############################################\n")
-
-    print(f"[Success] Your Ergo Node has been updated to version {latest_version}.\n")
-
-    # Provide instructions to check the service status
-    print("You can check the status of your Ergo Node service using:")
-    print("  systemctl status ergo-node.service\n")
+    # Prompt the user to run 'ergo-logs' or exit
+    prompt_message = "\nUpdate complete. Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
+    user_input = input(prompt_message).strip().lower()
+    if user_input in ['no', 'n']:
+        print("\nUpdate complete. Exiting the script.")
+        sys.exit(0)
+    else:
+        print("\nDisplaying the last 100 lines of the Ergo Node logs:\n")
+        # Run the 'ergo-logs' command or display the logs
+        run_command("journalctl -u ergo-node.service -n 100 --no-pager", capture_output=False)
+        sys.exit(0)
 
 # Entry point of the script
 if __name__ == "__main__":
