@@ -1,4 +1,4 @@
-# Tutorial: Running an Ergo Full Node on a Headless Raspberry Pi
+# Setup Tutorial: Running an Ergo Full Node on a Headless Raspberry Pi
 
 A tutorial on how to setup and run an Ergo Full Node on a Headless Raspberry Pi.
 
@@ -20,6 +20,12 @@ Recommended after you've setup a node a few times, automated script for setup. Q
 
 ## [Docker Ergo Node (IN-WORK)](/03-docker-ergo-node/node-specialist-tutorial.md)
 (COMING SOON) Recommended docker ergo node for the super savvy. This will allow bootstrap from genesis or start from a snapshot for a quick sync.
+
+
+# Update Tutorial: Updating your Ergo Node Version
+
+## [Ergo Node Update](/resources/ergo_node_update_readme.md)
+To update your ergo node, use this script in resources. Run by `python3 ergo_node_update.py` from \resources directory.
 
 --------------------------------------
 
