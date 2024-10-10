@@ -16,7 +16,7 @@ It performs the following tasks:
 7. Updates the systemd service file to point to the new JAR version throughout the file.
 8. Restarts the Ergo Node service to apply the changes.
 9. Checks the status of the Ergo Node service.
-10. Prints the node HTTP address for easy access.
+10. Prints the node HTTP address as a clickable hyperlink for easy access.
 11. Prompts the user to view the Ergo Node logs or exit.
 
 Prerequisites:
@@ -291,6 +291,22 @@ def get_node_port(ergo_conf_path):
         pass
     return default_port
 
+def create_clickable_link(url, text=None):
+    """
+    Creates a clickable hyperlink in the terminal using ANSI escape sequences.
+
+    Parameters:
+    - url (str): The URL to link to.
+    - text (str or None): The text to display. If None, the URL is displayed.
+
+    Returns:
+    - str: The formatted string with ANSI escape sequences for clickable links.
+    """
+    if text is None:
+        text = url
+    escape_url = url.replace("\\", "\\\\").replace(";", "\\;")
+    return f"\033]8;;{escape_url}\033\\{text}\033]8;;\033\\"
+
 def main():
     """
     The main function orchestrates the update process.
@@ -303,7 +319,7 @@ def main():
     - Compares versions and prompts for update if necessary.
     - Performs the update and restarts the service.
     - Checks the status of the Ergo Node service.
-    - Prints the node HTTP address for easy access.
+    - Prints the node HTTP address as a clickable hyperlink.
     - Prompts the user to view the Ergo Node logs or exit.
     """
     # Check if the script is run with root privileges
@@ -368,14 +384,16 @@ def main():
         print("\n[Info] Checking the status of the Ergo Node service...")
         run_command("systemctl status ergo-node.service", capture_output=False)
 
-        # Display the node HTTP address
+        # Display the node HTTP address as a clickable link
         ip_address = get_ipv4_address()
         ergo_conf_path = os.path.join(node_path, "ergo.conf")
         node_port = get_node_port(ergo_conf_path)
         node_url = f"http://{ip_address}:{node_port}/panel/"
 
+        clickable_link = create_clickable_link(node_url)
+
         print(f"\nYou can access your Ergo Node in a web browser at:")
-        print(f"  {node_url}\n")
+        print(f"  {clickable_link}\n")
 
         # Prompt the user to run 'ergo-logs' or exit
         prompt_message = "Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
@@ -415,14 +433,16 @@ def main():
     print("\n[Info] Checking the status of the Ergo Node service...")
     run_command("systemctl status ergo-node.service", capture_output=False)
 
-    # Display the node HTTP address
+    # Display the node HTTP address as a clickable link
     ip_address = get_ipv4_address()
     ergo_conf_path = os.path.join(node_path, "ergo.conf")
     node_port = get_node_port(ergo_conf_path)
     node_url = f"http://{ip_address}:{node_port}/panel/"
 
+    clickable_link = create_clickable_link(node_url)
+
     print(f"\nYou can access your Ergo Node in a web browser at:")
-    print(f"  {node_url}\n")
+    print(f"  {clickable_link}\n")
 
     # Prompt the user to run 'ergo-logs' or exit
     prompt_message = "Do you want to view the Ergo Node logs now? Press Enter for yes, or type 'no' to exit: "
