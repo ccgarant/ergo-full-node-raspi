@@ -43,6 +43,21 @@ def check_root_privileges():
         print("  sudo python3 {}".format(sys.argv[0]))
         sys.exit(1)
 
+def get_home_directory():
+    """
+    Returns the home directory of the user running the script.
+    If run with sudo, returns the home directory of the user who invoked sudo.
+    """
+    if os.getenv("SUDO_USER"):
+        # The script is run with sudo
+        sudo_user = os.getenv("SUDO_USER")
+        # Get the home directory of the sudo user
+        home_dir = os.path.expanduser(f"~{sudo_user}")
+    else:
+        # The script is not run with sudo
+        home_dir = os.path.expanduser("~")
+    return home_dir
+
 def run_command(command, capture_output=True, timeout=None):
     """
     Executes a shell command and handles errors.
@@ -289,10 +304,12 @@ def main():
     print("- The script manages the service directly using system commands.")
     print("- You must run this script with 'sudo'.\n")
 
-    # Manually set the node installation directory
-    node_path = "/home/yourusername/ergo-node"  # Replace with your actual path
+    # Get the home directory of the user who invoked sudo
+    home_dir = get_home_directory()
+    node_path = os.path.join(home_dir, "ergo-node")
 
     # Debug statements
+    print(f"[Debug] Home Directory: {home_dir}")
     print(f"[Debug] Node Installation Path: {node_path}")
 
     # Get the current Ergo Node version installed
