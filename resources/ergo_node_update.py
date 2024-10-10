@@ -26,7 +26,10 @@ def run_command(command, capture_output=True):
 def get_current_ergo_version(node_path):
     # Assuming the JAR file is named as ergo-<version>.jar
     ergo_node_path = os.path.join(node_path, "ergo-node")
-    files = os.listdir(ergo_node_path)
+    try:
+        files = os.listdir(ergo_node_path)
+    except FileNotFoundError:
+        return None
     for file in files:
         if file.startswith("ergo-") and file.endswith(".jar"):
             return file.replace("ergo-", "").replace(".jar", "")
@@ -126,20 +129,25 @@ def main():
     # Get the current Ergo version
     current_version = get_current_ergo_version(node_path)
     if not current_version:
-        print("[Error] Could not determine the current Ergo Node version.")
-        sys.exit(1)
-
-    print(f"[Info] Current Ergo Node version: {current_version}")
+        print("[Warning] Could not determine the current Ergo Node version.")
+    else:
+        print(f"[Info] Current Ergo Node version: {current_version}")
 
     # Get the latest Ergo version from GitHub
     latest_version = get_latest_ergo_version()
 
-    if latest_version == current_version:
+    # If current_version is known and equals latest_version, exit
+    if current_version and current_version == latest_version:
         print("[Info] You are already running the latest Ergo Node version.")
         sys.exit(0)
 
     # Prompt user to confirm updating to the latest version, default to 'yes' on Enter
-    confirm = input(f"Do you want to update to the latest version {latest_version}? ([yes]/no). Press Enter for default yes: ").strip().lower()
+    if current_version:
+        prompt_message = f"Do you want to update from version {current_version} to the latest version {latest_version}? ([yes]/no). Press Enter for default yes: "
+    else:
+        prompt_message = f"Do you want to install the latest Ergo Node version {latest_version}? ([yes]/no). Press Enter for default yes: "
+
+    confirm = input(prompt_message).strip().lower()
     if confirm in ['no', 'n']:
         print("Update canceled.")
         sys.exit(0)
@@ -157,7 +165,7 @@ def main():
 
     print(f"[Success] Your Ergo Node has been updated to version {latest_version}.\n")
 
-    # Suggest checking the status using the alias
+    # Suggest checking the status using the command
     print("You can check the status of your Ergo Node service using:")
     print("  systemctl status ergo-node.service\n")
 
