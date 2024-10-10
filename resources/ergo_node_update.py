@@ -242,26 +242,24 @@ def check_node_version_in_logs(version):
     """
     print("\n[Info] Checking the Ergo Node logs for version information...")
     try:
-        # Construct the command to search the logs for the version
-        # Attempt to run without 'sudo' first
-        command = f"journalctl -u ergo-node.service | grep -E 'Version:? {version}' | tail -1"
-        log_output = run_command(command, timeout=10)
+        # Limit logs to the last 1 hour to reduce processing time
+        command = f"journalctl -u ergo-node.service --since '1 hour ago' | grep -E 'Version:? {version}' | tail -1"
+        log_output = run_command(command, timeout=30)  # Increased timeout to 30 seconds
     except subprocess.CalledProcessError:
-        # If permission is denied, inform the user
         print("[Warning] Permission denied when accessing logs without 'sudo'. Trying with 'sudo'...")
         try:
-            # Try running the command with 'sudo'
-            command = f"sudo journalctl -u ergo-node.service | grep -E 'Version:? {version}' | tail -1"
-            log_output = run_command(command, timeout=10)
+            command = f"sudo journalctl -u ergo-node.service --since '1 hour ago' | grep -E 'Version:? {version}' | tail -1"
+            log_output = run_command(command, timeout=30)
         except subprocess.CalledProcessError as e:
             print(f"[Error] Failed to access logs even with 'sudo'. Error: {e}")
             return
+    except subprocess.TimeoutExpired:
+        print(f"[Error] Command timed out when checking logs. Try increasing the timeout or limiting the log scope.")
+        return
 
     if version in log_output:
-        # If the version is found in the logs, print a proof message
         print(f"[Proof] Ergo Node is running version {version} as per logs.")
     else:
-        # If the version is not found, print a warning with the last matching log entry
         print(f"[Warning] Could not confirm the node version from the logs. Last version in logs: {log_output}")
 
 def main():
@@ -291,24 +289,17 @@ def main():
     print("- The script manages the service directly using system commands.")
     print("- You must run this script with 'sudo'.\n")
 
-    # Get the user's home directory (e.g., '/root' when run with sudo)
-    home_dir = os.path.expanduser("~")
+    # Manually set the node installation directory
+    node_path = "/home/yourusername/ergo-node"  # Replace with your actual path
 
-    # Get the original user's home directory if available
-    original_user = os.getenv("SUDO_USER")
-    if original_user:
-        home_dir = os.path.expanduser(f"~{original_user}")
-
-    # Define the node installation directory (default: '~/ergo-node')
-    node_path = os.path.join(home_dir, "ergo-node")
+    # Debug statements
+    print(f"[Debug] Node Installation Path: {node_path}")
 
     # Get the current Ergo Node version installed
     current_version = get_current_ergo_version(node_path)
     if not current_version:
-        # If the version cannot be determined, print a warning
         print("[Warning] Could not determine the current Ergo Node version.")
     else:
-        # Print the current version
         print(f"[Info] Current Ergo Node version: {current_version}")
 
     # Get the latest Ergo Node version from GitHub
