@@ -25,9 +25,8 @@ def run_command(command, capture_output=True):
 
 def get_current_ergo_version(node_path):
     # Assuming the JAR file is named as ergo-<version>.jar
-    ergo_node_path = os.path.join(node_path, "ergo-node")
     try:
-        files = os.listdir(ergo_node_path)
+        files = os.listdir(node_path)
     except FileNotFoundError:
         return None
     for file in files:
@@ -52,15 +51,14 @@ def get_latest_ergo_version():
                         version_tag = version_tag[1:]
                     print(f"[Info] Latest mainnet release version: {version_tag}\n")
                     return version_tag
-            print("[Error] No suitable mainnet release found.")
-            sys.exit(1)
+        print("[Error] No suitable mainnet release found.")
+        sys.exit(1)
     except Exception as e:
         print(f"[Error] Failed to fetch the latest release version: {e}")
         sys.exit(1)
 
 def update_ergo_node(node_path, new_version):
-    ergo_node_path = os.path.join(node_path, "ergo-node")
-    os.chdir(ergo_node_path)
+    os.chdir(node_path)
 
     # Download the new Ergo JAR
     download_ergo_jar = f"wget -q https://github.com/ergoplatform/ergo/releases/download/v{new_version}/ergo-{new_version}.jar"
@@ -80,7 +78,7 @@ def update_systemd_service(node_path, new_version):
         sys.exit(1)
 
     # Replace the ExecStart line with the new version
-    new_exec_start = f"ExecStart=/usr/bin/java -Xmx4g -jar {node_path}/ergo-node/ergo-{new_version}.jar --mainnet -c {node_path}/ergo-node/ergo.conf"
+    new_exec_start = f"ExecStart=/usr/bin/java -Xmx4g -jar {node_path}/ergo-{new_version}.jar --mainnet -c {node_path}/ergo.conf"
     service_lines = service_contents.splitlines()
     for i, line in enumerate(service_lines):
         if line.startswith("ExecStart="):
@@ -90,7 +88,7 @@ def update_systemd_service(node_path, new_version):
     new_service_contents = "\n".join(service_lines)
 
     # Write the updated service file to a temporary location
-    temp_service_file = os.path.join(ergo_node_path, 'ergo-node.service')
+    temp_service_file = os.path.join(node_path, 'ergo-node.service')
     try:
         with open(temp_service_file, "w") as service_file:
             service_file.write(new_service_contents)
@@ -123,8 +121,8 @@ def main():
     # Get the user's home directory
     home_dir = os.path.expanduser("~")
 
-    # Assume the node is installed in the user's home directory
-    node_path = home_dir
+    # Node installation directory (default: ~/ergo-node)
+    node_path = os.path.join(home_dir, "ergo-node")
 
     # Get the current Ergo version
     current_version = get_current_ergo_version(node_path)
