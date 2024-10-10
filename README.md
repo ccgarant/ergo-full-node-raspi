@@ -24,7 +24,7 @@ Recommended after you've setup a node a few times, automated script for setup. Q
 
 # Update Tutorial: Updating your Ergo Node Version
 
-## [Ergo Node Update](/resources/ergo_node_update.py)
+## [Ergo Node Update](/resources/ergo_node_update_readme.py)
 To update your ergo node, use this script in resources. Run by `python3 ergo_node_update.py` from \resources directory.
 
 --------------------------------------
